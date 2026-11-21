@@ -1,5 +1,7 @@
 # Guerra dos Mil Povos — JRPG 2D-HD
 
+![Aldeia de Uruçumirim à noite, com o grupo e a fala da Aiyra](docs/screenshot-aldeia.png)
+
 Protótipo jogável de um JRPG em estilo **2D-HD** (na linha de *Octopath Traveler* e *Live A Live*) que roda direto no navegador. O jogo é inspirado no livro **"Guerra dos Mil Povos"**, de Víktor Waewell.
 
 A história se passa no Brasil do século XVI, durante a **Confederação dos Tamoios**, entre a Baía de Guanabara e Santos.
