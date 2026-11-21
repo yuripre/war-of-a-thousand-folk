@@ -52,6 +52,10 @@ Todo o texto do jogo está em português (PT-BR).
 
 ## Como jogar
 
+**▶ Jogue online:** https://yuripre.github.io/war-of-a-thousand-folk/
+
+Para jogar localmente:
+
 O jogo inteiro está em um único arquivo: basta abrir o **`index.html`** no navegador (Chrome, Edge ou Firefox).
 
 Se o navegador bloquear o arquivo local, sirva a pasta assim:
