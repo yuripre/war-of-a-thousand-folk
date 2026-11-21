@@ -1,0 +1,189 @@
+
+<!-- =====================================================================
+     1. BANCO DE DADOS DO JOGO (JSON puro — pronto para migrar ao RPG Maker)
+     Cada bloco corresponde a um arquivo data/*.json do RPG Maker MZ:
+     System, Actors, Skills, Items, Equips, Enemies, Speakers, Dialogs, Maps
+     ===================================================================== -->
+<script type="application/json" data-db="system">
+{
+ "title":"Guerra dos Mil Povos","version":"1.0.0-etapa4","tileSize":16,"screen":[480,270],
+ "elements":[
+  {"id":"lamina","name":"Lâmina","icon":"⚔"},
+  {"id":"flecha","name":"Flecha","icon":"➶"},
+  {"id":"contusao","name":"Contusão","icon":"♣"},
+  {"id":"fogo","name":"Fogo/Pólvora","icon":"✹"},
+  {"id":"enxame","name":"Enxame","icon":"✱","special":true}
+ ],
+ "fleetOrders":[
+  {"id":"flechas_fogo","name":"Flechas de Fogo","cost":50,"element":"fogo","damage":110,"state":"incendio","turns":3,"desc":"Todas as igaras disparam flechas incendiárias. Dano de Fogo em todos os inimigos; navios pegam fogo."},
+  {"id":"chuva_colmeias","name":"Chuva de Colmeias","cost":100,"element":"enxame","damage":80,"state":"enxame","turns":3,"desc":"Dezenas de colmeias lançadas aos conveses. O enxame fere e faz o inimigo errar golpes."}
+ ],
+ "fleetGain":{"round":25,"break":15},
+ "battle":{"maxBP":5,"bpPerTurn":1,"maxBoost":3,"breakStunTurns":1,"breakDamageBonus":1.5,"encounterRate":{"trilha":0.012}},
+ "startParty":["afonso","aiyra","kaiyke","heloisa"],
+ "startItems":[["cruz_afonso",1],["polvora",2],["beiju",1]],
+ "shops":{"jean":{"name":"Mercadorias de Jean","goods":["beiju","mandioca","ervas","mel","jurubeba","polvora","cauim","gibao_acolchoado","pintura_jenipapo","manto_guara","arco_ipe_roxo","tacape_pau_ferro","lanca_osso","montante","bolsa_boticaria","couraca_couro","colar_dentes","anel_prata"]}},
+ "tiles":{
+  ".":{"name":"Grama","ground":".","solid":false},
+  ",":{"name":"Chão de mata","ground":",","solid":false},
+  ":":{"name":"Trilha de terra","ground":":","solid":false},
+  "s":{"name":"Areia","ground":"s","solid":false},
+  "~":{"name":"Água","ground":"~","solid":true},
+  "_":{"name":"Ponte de troncos","ground":"_","solid":false},
+  "#":{"name":"Paliçada","ground":"#","solid":true,"obj":"palicada"},
+  "T":{"name":"Mata densa","ground":"T","solid":true,"obj":"arvore"},
+  "P":{"name":"Palmeira","ground":"auto","solid":true,"obj":"palmeira"},
+  "b":{"name":"Arbusto","ground":"auto","solid":true,"obj":"arbusto"},
+  "f":{"name":"Samambaia","ground":"auto","solid":false,"obj":"samambaia"},
+  "w":{"name":"Flores","ground":"auto","solid":false,"deco":"flores"},
+  "r":{"name":"Pedra","ground":"auto","solid":true,"obj":"pedra"}
+ },
+ "objectTypes":{
+  "oca":{"w":4,"h":2,"solid":true,"light":"porta"},
+  "casa_grande":{"w":6,"h":2,"solid":true,"light":"porta"},
+  "fogueira":{"w":2,"h":1,"solid":true,"light":"fogueira"},
+  "tocha":{"w":1,"h":1,"solid":true,"light":"tocha"},
+  "igara":{"w":4,"h":1,"solid":true},
+  "igacaba":{"w":1,"h":1,"solid":true},
+  "moquem":{"w":2,"h":1,"solid":true},
+  "acampamento":{"w":3,"h":1,"solid":true},
+  "brasas":{"w":1,"h":1,"solid":false,"light":"brasas"}
+ },
+ "lightTypes":{
+  "fogueira":{"r":120,"i":0.92,"color":"#ff9a40","glow":0.26,"flicker":0.12,"cast":true,"oy":-8},
+  "tocha":{"r":70,"i":0.85,"color":"#ffa850","glow":0.24,"flicker":0.16,"cast":true,"oy":-22},
+  "porta":{"r":34,"i":0.55,"color":"#ff8a30","glow":0.22,"flicker":0.05,"cast":false,"oy":-6},
+  "brasas":{"r":56,"i":0.75,"color":"#ff6020","glow":0.3,"flicker":0.22,"cast":true,"oy":-4},
+  "vagalume":{"r":18,"i":0.45,"color":"#d8ff80","glow":0.25}
+ }
+}
+</script>
+
+<script type="application/json" data-db="actors">
+[
+ {"id":"afonso","name":"Afonso","class":"Espadachim Diplomata","role":"Tanque / Suporte","origin":"Reino de Portugal",
+  "bio":"Ex-soldado que vendeu a armadura em Lisboa para buscar paz no Novo Mundo. Carrega uma espada velha e o peso das guerras que lutou.",
+  "level":1,"params":{"mhp":420,"mmp":60,"atk":38,"def":54,"mat":22,"mdf":36,"agi":26,"luk":30},
+  "growth":{"mhp":42,"mmp":5,"atk":3,"def":5,"mat":2,"mdf":3,"agi":2,"luk":2},
+  "weaponTypes":["lamina"],"equip":{"weapon":"espada_velha","armor":"gibao_linho","acc":null},
+  "skills":["golpe_firme","contra_ataque","palavra_de_paz","postura_guardiao"],
+  "look":{"skin":"#e2b48c","hair":"#3a2618","hairStyle":"short","beard":true,"top":"shirt","topColor":"#d6ccb4","vest":"#6e4e32","bottom":"pants","bottomColor":"#4e3c2c","boots":true,"belt":"#2e2014","weapon":"sword"}},
+ {"id":"aiyra","name":"Aiyra","class":"Caçadora da Mata","role":"DPS Ágil","origin":"Tupinambá de Uruçumirim",
+  "bio":"Guerreira Tupinambá movida pela sede de justiça contra os invasores. Irmã gêmea de Kaiyke — e dividida pelo que sente por Afonso.",
+  "level":1,"params":{"mhp":300,"mmp":80,"atk":44,"def":28,"mat":30,"mdf":30,"agi":52,"luk":40},
+  "growth":{"mhp":28,"mmp":7,"atk":4,"def":2,"mat":3,"mdf":2,"agi":5,"luk":3},
+  "weaponTypes":["flecha"],"equip":{"weapon":"arco_pau_darco","armor":"tanga_penas","acc":null},
+  "skills":["chuva_flechas","flecha_flamejante","flecha_timbo","passo_onca"],
+  "look":{"skin":"#b9794e","hair":"#16100e","hairStyle":"long","top":"wrap","topColor":"#c8a060","bottom":"featherskirt","bottomColor":"#b8402a","paint2":"#1a1a26","head":"band","bandColor":"#c03020","feather":"#f0c020","feather2":"#2a7ad0","necklace":true,"weapon":"bow"}},
+ {"id":"kaiyke","name":"Kaiyke","class":"Guerreiro Tamoio","role":"DPS Físico Pesado","origin":"Tupinambá de Uruçumirim",
+  "bio":"Irmão gêmeo de Aiyra, protetor feroz de seu povo. Desconfia de todo peró — principalmente dos que falam bonito.",
+  "level":1,"params":{"mhp":380,"mmp":40,"atk":58,"def":36,"mat":14,"mdf":22,"agi":30,"luk":24},
+  "growth":{"mhp":38,"mmp":3,"atk":6,"def":3,"mat":1,"mdf":2,"agi":2,"luk":2},
+  "weaponTypes":["contusao","lamina"],"equip":{"weapon":"ibirapema","armor":"pintura_urucum","acc":null},
+  "skills":["golpe_tacape","investida_lanca","grito_guerra","furia_tamoio"],
+  "look":{"skin":"#b0704a","hair":"#16100e","hairStyle":"bowl","top":"bare","paint":"#c0301c","paint2":"#1a1a26","bottom":"loincloth","bottomColor":"#8a5a2a","head":"cocar","feathers":["#e03a1a","#f0c020","#2a7ad0","#e03a1a","#f08a20"],"necklace":true,"weapon":"club"}},
+ {"id":"heloisa","name":"Heloísa","class":"Estrategista / Alquimista Colonial","role":"Suporte / Controle","origin":"Vila de Santos",
+  "bio":"Mulher astuta que abandonou a vida nas vilas coloniais para forjar o próprio destino. Sabe misturar ervas, salitre e enxofre.",
+  "level":1,"params":{"mhp":290,"mmp":110,"atk":26,"def":30,"mat":50,"mdf":46,"agi":38,"luk":46},
+  "growth":{"mhp":26,"mmp":9,"atk":2,"def":2,"mat":5,"mdf":4,"agi":3,"luk":4},
+  "weaponTypes":["fogo"],"equip":{"weapon":"bolsa_alquimista","armor":"vestido_viagem","acc":null},
+  "skills":["pocao_ervas","bomba_polvora","po_pimenta","analise_tatica","unguento"],
+  "look":{"skin":"#ecc29e","hair":"#7a3a1e","hairStyle":"bun","top":"dress","topColor":"#5e6e52","bottomColor":"#5a3238","belt":"#2e2014","satchel":true,"flask":true}}
+]
+</script>
+
+<script type="application/json" data-db="skills">
+{
+ "golpe_firme":{"name":"Golpe Firme","user":"afonso","type":"fisico","element":"lamina","power":1.3,"cost":0,"target":"inimigo","hits":1,"desc":"Corte disciplinado de quem já viu muitas batalhas."},
+ "contra_ataque":{"name":"Contra-Ataque","user":"afonso","type":"postura","element":"lamina","power":1.1,"cost":8,"target":"self","effects":[{"state":"contra","turns":2}],"desc":"Assume guarda: revida golpes físicos por 2 turnos."},
+ "palavra_de_paz":{"name":"Palavra de Paz","user":"afonso","type":"moral","element":"none","power":0,"cost":14,"target":"todos_aliados","effects":[{"buff":"mdf","value":1.25,"turns":3},{"cure":"medo"}],"desc":"Discurso sereno que restaura a moral do grupo e remove o Medo."},
+ "postura_guardiao":{"name":"Postura do Guardião","user":"afonso","type":"postura","element":"none","power":0,"cost":10,"target":"self","effects":[{"state":"provocar","turns":2},{"buff":"def","value":1.5,"turns":2}],"desc":"Atrai os ataques inimigos e ergue a defesa."},
+ "chuva_flechas":{"name":"Chuva de Flechas","user":"aiyra","type":"fisico","element":"flecha","power":0.55,"cost":12,"target":"inimigos_aleatorio","hits":4,"desc":"Quatro flechas em rápida sucessão contra alvos aleatórios."},
+ "flecha_flamejante":{"name":"Flecha Flamejante","user":"aiyra","type":"fisico","element":"fogo","power":1.4,"cost":10,"target":"inimigo","hits":1,"effects":[{"state":"queimadura","chance":0.4,"turns":3}],"desc":"Ponta envolta em algodão e resina incendiada."},
+ "flecha_timbo":{"name":"Flecha de Timbó","user":"aiyra","type":"fisico","element":"flecha","power":0.9,"cost":8,"target":"inimigo","hits":1,"effects":[{"state":"veneno","chance":0.75,"turns":4}],"desc":"Veneno natural do cipó-timbó que entorpece o alvo."},
+ "passo_onca":{"name":"Passo da Onça","user":"aiyra","type":"suporte","element":"none","power":0,"cost":6,"target":"self","effects":[{"buff":"agi","value":1.5,"turns":3},{"buff":"eva","value":0.25,"turns":3}],"desc":"Movimentos silenciosos: mais agilidade e esquiva."},
+ "golpe_tacape":{"name":"Golpe de Tacape","user":"kaiyke","type":"fisico","element":"contusao","power":1.6,"cost":0,"target":"inimigo","hits":1,"desc":"Pancada esmagadora da ibirapema cerimonial."},
+ "investida_lanca":{"name":"Investida da Lança","user":"kaiyke","type":"fisico","element":"lamina","power":1.2,"cost":10,"target":"linha","hits":1,"desc":"Atravessa o inimigo da frente e atinge o de trás."},
+ "grito_guerra":{"name":"Grito de Guerra","user":"kaiyke","type":"suporte","element":"none","power":0,"cost":12,"target":"todos_aliados","effects":[{"buff":"atk","value":1.3,"turns":3}],"desc":"Brado tamoio que incendeia o ânimo dos aliados."},
+ "furia_tamoio":{"name":"Fúria Tamoio","user":"kaiyke","type":"fisico","element":"contusao","power":2.2,"cost":24,"target":"todos_inimigos","hits":1,"desc":"Investida feroz que varre todos os inimigos."},
+ "pocao_ervas":{"name":"Poção de Ervas","user":"heloisa","type":"cura","element":"none","power":160,"cost":10,"target":"aliado","desc":"Infusão de ervas da mata e da botica colonial."},
+ "bomba_polvora":{"name":"Bomba de Pólvora","user":"heloisa","type":"magico","element":"fogo","power":1.5,"cost":16,"target":"todos_inimigos","hits":1,"desc":"Pólvora improvisada num cabaço com pavio."},
+ "po_pimenta":{"name":"Pó de Pimenta","user":"heloisa","type":"debuff","element":"none","power":0,"cost":8,"target":"todos_inimigos","effects":[{"debuff":"hit","value":0.7,"turns":3}],"desc":"Malagueta moída lançada aos olhos: reduz a precisão."},
+ "analise_tatica":{"name":"Análise Tática","user":"heloisa","type":"suporte","element":"none","power":0,"cost":4,"target":"inimigo","effects":[{"reveal":"fraquezas"}],"desc":"Revela todas as fraquezas de um inimigo."},
+ "unguento":{"name":"Unguento","user":"heloisa","type":"cura","element":"none","power":0,"cost":6,"target":"aliado","effects":[{"cure":"veneno"},{"cure":"queimadura"}],"desc":"Remove veneno e queimaduras."}
+}
+</script>
+
+<script type="application/json" data-db="items">
+{
+ "beiju":{"name":"Beiju","type":"consumivel","price":20,"effect":{"hp":120},"desc":"Disco de farinha de mandioca. Restaura 120 HP."},
+ "mandioca":{"name":"Mandioca Cozida","type":"consumivel","price":12,"effect":{"hp":80},"desc":"Raiz cozida, simples e farta. Restaura 80 HP."},
+ "mel":{"name":"Mel de Jataí","type":"consumivel","price":40,"effect":{"mp":30},"desc":"Mel de abelha sem ferrão. Restaura 30 MP."},
+ "ervas":{"name":"Ervas do Pajé","type":"consumivel","price":60,"effect":{"hp":220},"desc":"Folhas abençoadas pelo pajé. Restaura 220 HP."},
+ "jurubeba":{"name":"Raiz de Jurubeba","type":"consumivel","price":25,"effect":{"cure":["veneno"]},"desc":"Raiz amarga. Cura envenenamento."},
+ "cauim":{"name":"Cauim","type":"consumivel","price":50,"effect":{"bp":2},"desc":"Bebida fermentada das festas. +2 Pontos de Impulso (Boost)."},
+ "polvora":{"name":"Pólvora Seca","type":"batalha","price":45,"effect":{"damage":150,"element":"fogo","target":"todos_inimigos"},"desc":"Lançada em batalha: dano de Fogo/Pólvora em todos."},
+ "colmeia":{"name":"Colmeia de Abelhas","type":"batalha","price":0,"effect":{"damage":70,"element":"enxame","state":"enxame","turns":3,"target":"todos_inimigos"},"desc":"“Granada” tamoio: lança um enxame furioso sobre todos os inimigos."},
+ "penas_arara":{"name":"Penas de Arara","type":"material","price":30,"desc":"Penas rubras usadas em cocares e flechas."},
+ "cruz_afonso":{"name":"Cruz de Ferro","type":"chave","price":0,"desc":"Única lembrança que Afonso não vendeu em Lisboa."},
+ "carta_lacrada":{"name":"Carta Lacrada","type":"chave","price":0,"desc":"Ordens ao Capitão Dom Álvaro Teles. Selo com as armas do fidalgo."}
+}
+</script>
+
+<script type="application/json" data-db="equips">
+{
+ "espada_velha":{"name":"Espada Velha","slot":"weapon","element":"lamina","for":["afonso"],"price":0,"params":{"atk":18},"desc":"Lâmina de Toledo, gasta por duas guerras."},
+ "montante":{"name":"Montante de Mazagão","slot":"weapon","element":"lamina","for":["afonso"],"price":300,"params":{"atk":30,"agi":-3},"desc":"Espadão de duas mãos das praças d'África. Pesado e brutal."},
+ "espada_fidalgo":{"name":"Espada do Fidalgo","slot":"weapon","element":"lamina","for":["afonso"],"price":0,"params":{"atk":38,"luk":6},"desc":"A espada de Dom Álvaro. Afonso jura usá-la só para proteger."},
+ "arco_pau_darco":{"name":"Arco de Pau-d'Arco","slot":"weapon","element":"flecha","for":["aiyra"],"price":0,"params":{"atk":20,"agi":4},"desc":"Arco longo de madeira de ipê."},
+ "arco_ipe_roxo":{"name":"Arco de Ipê-Roxo","slot":"weapon","element":"flecha","for":["aiyra"],"price":260,"params":{"atk":28,"agi":6},"desc":"Madeira escura e flexível; a corda canta ao disparar."},
+ "arco_guerra":{"name":"Arco de Guerra Tamoio","slot":"weapon","element":"flecha","for":["aiyra"],"price":0,"params":{"atk":36,"agi":8,"luk":4},"desc":"Presente de Aimberê. Penas de gavião-real nas flechas."},
+ "ibirapema":{"name":"Ibirapema","slot":"weapon","element":"contusao","for":["kaiyke"],"price":0,"params":{"atk":26},"desc":"Tacape cerimonial adornado de penas."},
+ "tacape_pau_ferro":{"name":"Tacape de Pau-Ferro","slot":"weapon","element":"contusao","for":["kaiyke"],"price":280,"params":{"atk":36,"agi":-2},"desc":"Madeira tão dura que lasca o aço."},
+ "lanca_osso":{"name":"Lança de Ponta de Osso","slot":"weapon","element":"lamina","for":["kaiyke"],"price":220,"params":{"atk":30,"agi":6},"desc":"Muda o ataque de Kaiyke para Lâmina — útil contra quem resiste a pancadas."},
+ "bolsa_alquimista":{"name":"Bolsa de Alquimista","slot":"weapon","element":"fogo","for":["heloisa"],"price":0,"params":{"atk":8,"mat":16},"desc":"Cabaças, pavios e frascos."},
+ "bolsa_boticaria":{"name":"Bolsa de Boticária","slot":"weapon","element":"fogo","for":["heloisa"],"price":240,"params":{"atk":12,"mat":26,"mdf":6},"desc":"Salitre refinado e ervas raras da botica de Santos."},
+ "gibao_linho":{"name":"Gibão de Linho","slot":"armor","for":["afonso","heloisa"],"price":0,"params":{"def":10},"desc":"O que restou depois de vender a couraça."},
+ "gibao_acolchoado":{"name":"Gibão Acolchoado","slot":"armor","for":["afonso","heloisa"],"price":180,"params":{"def":18,"mdf":4},"desc":"Algodão em camadas; detém um virote de besta."},
+ "couraca_couro":{"name":"Couraça de Couro","slot":"armor","for":["afonso","kaiyke"],"price":260,"params":{"def":24,"agi":-2},"desc":"Couro de anta curtido e endurecido."},
+ "tanga_penas":{"name":"Saiote de Penas","slot":"armor","for":["aiyra"],"price":0,"params":{"def":5,"agi":3},"desc":"Leve e silencioso na mata."},
+ "pintura_urucum":{"name":"Pintura de Urucum","slot":"armor","for":["kaiyke","aiyra"],"price":0,"params":{"def":6,"atk":3},"desc":"Pintura de guerra em vermelho vivo."},
+ "pintura_jenipapo":{"name":"Pintura de Jenipapo","slot":"armor","for":["aiyra","kaiyke"],"price":160,"params":{"def":12,"agi":5},"desc":"Traços negros que, dizem, confundem os olhos do inimigo."},
+ "manto_guara":{"name":"Manto de Penas de Guará","slot":"armor","for":["aiyra","kaiyke","heloisa"],"price":200,"params":{"def":12,"mdf":14},"desc":"Penas rubras costuradas em rede de algodão."},
+ "vestido_viagem":{"name":"Vestido de Viagem","slot":"armor","for":["heloisa"],"price":0,"params":{"def":7,"mdf":6},"desc":"Remendado na fuga da vila."},
+ "colar_dentes":{"name":"Colar de Dentes de Onça","slot":"acc","for":["afonso","aiyra","kaiyke","heloisa"],"price":150,"params":{"atk":6,"luk":4},"desc":"Coragem de quem enfrentou a Iauaretê."},
+ "maraca_paje":{"name":"Maracá do Pajé","slot":"acc","for":["afonso","aiyra","kaiyke","heloisa"],"price":0,"params":{"mmp":20,"mat":6},"desc":"O som do maracá afasta os maus espíritos."},
+ "cocar_arara":{"name":"Cocar de Arara","slot":"acc","for":["afonso","aiyra","kaiyke","heloisa"],"price":0,"params":{"agi":6,"luk":6,"mhp":30},"desc":"Honra concedida pelos anciãos de Uruçumirim."},
+ "anel_prata":{"name":"Anel de Prata de Lisboa","slot":"acc","for":["afonso","aiyra","kaiyke","heloisa"],"price":220,"params":{"mdf":8,"luk":8},"desc":"Trocado por Jean em algum porto distante."}
+}
+</script>
+
+
+<script type="application/json" data-db="speakers">
+{
+ "narrador":{"name":"","color":"#f3e6c8"},
+ "":{"name":"","color":"#f3e6c8"},
+ "voz":{"name":"Voz distante","color":"#c8b8a8"},
+ "afonso":{"name":"Afonso","color":"#f0c878","actor":"afonso"},
+ "aiyra":{"name":"Aiyra","color":"#ff9a7a","actor":"aiyra"},
+ "kaiyke":{"name":"Kaiyke","color":"#ff6a4a","actor":"kaiyke"},
+ "heloisa":{"name":"Heloísa","color":"#b8e0a8","actor":"heloisa"},
+ "fidalgo":{"name":"Dom Álvaro Teles","color":"#e05a5a","look":{"skin":"#e8bf9a","hair":"#2a1a10","hairStyle":"short","beard":true,"top":"armor","topColor":"#7a1a24","sleeve":"#7a1a24","bottom":"pants","bottomColor":"#2a2a3a","boots":true,"head":"morion","weapon":"sword"}},
+ "mercenario":{"name":"Arcabuzeiro","color":"#c8a8a0","look":{"skin":"#d8a67e","hair":"#4a3020","hairStyle":"short","beard":true,"top":"shirt","topColor":"#6a6450","bottom":"pants","bottomColor":"#4a3a2a","boots":true,"belt":"#2a1a10","head":"morion","weapon":"arcabuz"}},
+ "cativo":{"name":"Cativo","color":"#d8c8a0","look":{"skin":"#a86e48","hair":"#16100e","hairStyle":"bowl","top":"bare","bottom":"loincloth","bottomColor":"#a08060"}},
+ "jandira":{"name":"Jandira","color":"#f0c8a0","look":{"skin":"#b07850","hair":"#16100e","hairStyle":"long","top":"wrap","topColor":"#d8c090","bottom":"loincloth","bottomColor":"#d0b080","necklace":true}},
+ "aimbere":{"name":"Aimberê","color":"#ffd060","look":{"skin":"#a8683e","hair":"#16100e","hairStyle":"bowl","top":"cape","feathers":["#d03a1a","#f0c020","#d03a1a","#2a6ac0"],"paint":"#b0281a","bottom":"loincloth","bottomColor":"#7a4a22","head":"cocar","feathers2":true,"necklace":true,"weapon":"spear"}},
+ "paje":{"name":"Pajé Guyrá","color":"#b8a0ff","look":{"skin":"#9a6040","hair":"#a8a498","hairStyle":"long","top":"cape","feathers":["#e8b020","#2a8a6a","#e8b020"],"bottom":"loincloth","bottomColor":"#6a4a2a","head":"band","bandColor":"#e8b020","feather":"#2a8a6a","weapon":"maraca"}},
+ "jean":{"name":"Jean, o Truchement","color":"#a0c8ff","look":{"skin":"#e6b896","hair":"#b06a2a","hairStyle":"short","beard":true,"top":"shirt","topColor":"#8a3a2a","bottom":"pants","bottomColor":"#3e4060","belt":"#2a1a10"}},
+ "potira":{"name":"Anciã Potira","color":"#e8c8a8","look":{"skin":"#9a6844","hair":"#d0ccc0","hairStyle":"long","top":"wrap","topColor":"#d8c8a0","bottom":"loincloth","bottomColor":"#c8b890","necklace":true}},
+ "curumim":{"name":"Curumim","color":"#ffe0a0","look":{"skin":"#b47a50","hair":"#16100e","hairStyle":"bowl","top":"bare","paint":"#c0301c","bottom":"loincloth","bottomColor":"#a07040","child":true}},
+ "cunha":{"name":"Cunhantã","color":"#ffd0c0","look":{"skin":"#b07448","hair":"#16100e","hairStyle":"long","top":"bare","paint2":"#1a1a26","bottom":"loincloth","bottomColor":"#c09060","child":true}},
+ "guaraci":{"name":"Guaraci","color":"#ffb070","look":{"skin":"#a8683e","hair":"#16100e","hairStyle":"bowl","top":"bare","paint":"#1a1a26","bottom":"loincloth","bottomColor":"#6a4220","head":"band","bandColor":"#e8b020","feather":"#e03a1a","necklace":true,"weapon":"spear"}},
+ "pescador":{"name":"Pescador Ubiratã","color":"#a8d8e8","look":{"skin":"#9e6440","hair":"#16100e","hairStyle":"bowl","top":"bare","bottom":"loincloth","bottomColor":"#8a7a5a"}},
+ "caua":{"name":"Mensageiro Cauã","color":"#ffb070","look":{"skin":"#a8683e","hair":"#16100e","hairStyle":"bowl","top":"bare","paint":"#c0301c","bottom":"loincloth","bottomColor":"#6a4220","head":"band","bandColor":"#2a6ac0","feather":"#f0c020"}},
+ "capataz":{"name":"Capataz","color":"#e0a070","look":{"skin":"#d8a070","hair":"#3a2a1a","hairStyle":"short","beard":true,"top":"shirt","topColor":"#8a6a4a","vest":"#4a3020","bottom":"pants","bottomColor":"#3a3a2a","boots":true,"belt":"#2a1a10","weapon":"whip"}},
+ "besteiro":{"name":"Besteiro","color":"#c8a8a0","look":{"skin":"#e0b088","hair":"#5a3a20","hairStyle":"short","top":"shirt","topColor":"#5a4a6a","vest":"#7a6a50","bottom":"pants","bottomColor":"#3a3040","boots":true,"belt":"#2a1a10","head":"morion","weapon":"besta"}},
+ "espadachim":{"name":"Espadachim","color":"#c8a8a0","look":{"skin":"#d8a67e","hair":"#2a1a10","hairStyle":"short","beard":true,"top":"armor","topColor":"#3a4a6a","sleeve":"#3a4a6a","bottom":"pants","bottomColor":"#2a2a3a","boots":true,"head":"morion","weapon":"sword"}},
+ "jaci":{"name":"Coletora Jaci","color":"#c8f0a0","look":{"skin":"#b07a50","hair":"#16100e","hairStyle":"long","top":"wrap","topColor":"#8aa060","bottom":"loincloth","bottomColor":"#8a7040","satchel":true}}
+}
+</script>

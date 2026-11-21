@@ -1,0 +1,98 @@
+
+<script>
+'use strict';
+/* =====================================================================
+   9. ETAPA 3 — CERCO NA BAÍA DE GUANABARA (cinemáticas + campanha naval)
+   ===================================================================== */
+class BayScene{
+ constructor(mode){
+  this.mode=mode;this.t=0;this.camX=0;this.fx=new Particles();this.lights=[];this.proj=[];this.shakeT=0;this.speed=mode==='epilogo'?.25:.55;
+  this.hz=150;this.far=makeMountains(1400,100,'#6a3a6e',11,[[520,34,96],[430,52,52],[980,60,70]],1.4);this.cloud=makeClouds(960,80,3);
+  this.amb={color:mode==='epilogo'?'rgba(50,20,40,0.12)':'rgba(40,12,50,0.2)',grade:['#ffa860','#4a2060'],gradeAlpha:.26,bloom:.75,tilt:.7};
+  const r=rng(mode.length*13+5);
+  this.igaras=[];for(let i=0;i<13;i++)this.igaras.push({ox:-230+r()*470,y:176+Math.floor(r()*5)*11,crew:['guaraci','caua','pescador','cativo'][i%4],ph:r()*6});
+  this.party={ox:20,y:222};
+  if(mode==='partida')this.ships=[{x:420,par:.55,s:.6,img:IMG.bergantim},{x:640,par:.45,s:.42,img:IMG.nau},{x:780,par:.4,s:.36,img:IMG.nau}];
+  else if(mode==='nau')this.ships=[{x:30,par:.2,s:1.15,img:IMG.nau,near:true},{x:860,par:.4,s:.36,img:IMG.nau}];
+  else this.ships=[{x:420,par:.4,s:.5,img:IMG.nau,burn:true,sink:30},{x:720,par:.35,s:.36,img:IMG.bergantim,burn:true,sink:24}];
+  this.birds=Array.from({length:7},(_,i)=>({x:Math.random()*W,y:30+Math.random()*60,s:.3+Math.random()*.4,ph:i}));
+ }
+ shipPos(s){const sc=s.s;return{x:s.x-this.camX*s.par,y:this.hz+(s.near?78:18+sc*30),w:s.img.width*sc,h:s.img.height*sc};}
+ *volley(ship,n){const P=this.shipPos(ship),ps=[];
+  for(let i=0;i<n;i++){const ig=this.igaras[i%this.igaras.length],sx=240+ig.ox;const p={x:sx,y:ig.y-8,tx:P.x+P.w*(.2+Math.random()*.6),ty:P.y-P.h*(.25+Math.random()*.5),n:34+Math.floor(Math.random()*16),i:-i*3};ps.push(p);this.proj.push(p);}
+  yield()=>ps.every(p=>p.i>=p.n);ship.burn=true;this.shakeT=10;}
+ update(){this.t++;this.camX+=this.speed;
+  for(const p of this.proj){p.i++;if(p.i<0)continue;const k=p.i/p.n;p.cx=lerp(p.x,p.tx,k);p.cy=lerp(p.y,p.ty,k)-60*Math.sin(k*Math.PI);this.fx.spark(p.cx,p.cy,1,1);
+   if(p.i===p.n){this.fx.burst(p.tx,p.ty,10,'#ffb040');this.lights.push({x:p.tx,y:p.ty,r:60,i:.9,color:'#ff9040',glow:.5,decay:.9});}}
+  this.proj=this.proj.filter(p=>p.i<p.n);
+  for(const s of this.ships)if(s.burn&&this.t%3===0){const P=this.shipPos(s);this.fx.spark(P.x+P.w*Math.random(),P.y-P.h*.5*Math.random(),1,6);if(this.t%9===0)this.fx.smoke(P.x+P.w*(.3+Math.random()*.4),P.y-P.h*.6,1,'rgba(50,40,50,0.45)');}
+  for(const l of this.lights){if(l.decay)l.i*=l.decay;flicker(l,this.t);}this.lights=this.lights.filter(l=>l.i>.03);
+  this.fx.update();if(this.shakeT>0)this.shakeT--;
+ }
+ render(){const t=this.t,hz=this.hz,sx=this.shakeT?(Math.random()-.5)*this.shakeT*.3:0;
+  g.save();g.translate(Math.round(sx),0);
+  let gr=g.createLinearGradient(0,0,0,hz);const ep=this.mode==='epilogo';
+  gr.addColorStop(0,ep?'#3a1a48':'#1c1238');gr.addColorStop(.5,ep?'#b84a6a':'#7a3a6a');gr.addColorStop(.85,'#f08060');gr.addColorStop(1,'#ffc890');g.fillStyle=gr;g.fillRect(-10,-10,W+20,hz+10);
+  const sunX=300,sunY=hz-(ep?4:16);g.globalCompositeOperation='lighter';gr=g.createRadialGradient(sunX,sunY,0,sunX,sunY,120);gr.addColorStop(0,'rgba(255,200,110,0.75)');gr.addColorStop(1,'rgba(255,120,60,0)');g.fillStyle=gr;g.fillRect(sunX-120,sunY-120,240,240);g.globalCompositeOperation='source-over';
+  g.fillStyle='#fff2c8';g.beginPath();g.arc(sunX,sunY,15,0,Math.PI*2);g.fill();
+  const lay=(img,par,y,drift=0)=>{const w=img.width,off=(((this.camX*par+drift)%w)+w)%w;g.drawImage(img,-off,y);if(w-off<W)g.drawImage(img,w-off,y);};
+  lay(this.cloud,.03,14,t*.05);
+  for(const b of this.birds){const x=((b.x+t*b.s)%(W+40))-20,y=b.y+Math.sin(t*.03+b.ph)*4,f=Math.floor(t/10+b.ph)%2;g.fillStyle='#2a1428';g.fillRect(x,y,1,1);g.fillRect(x-1-f,y-1+f,1,1);g.fillRect(x+1+f,y-1+f,1,1);}
+  lay(this.far,.1,hz-this.far.height+4);
+  gr=g.createLinearGradient(0,hz,0,H);gr.addColorStop(0,'#e88a60');gr.addColorStop(.2,'#8a4a6a');gr.addColorStop(1,'#1e1838');g.fillStyle=gr;g.fillRect(-10,hz,W+20,H-hz+10);
+  g.globalCompositeOperation='lighter';
+  for(let y=hz+1;y<H;y+=2){const d=(y-hz)/(H-hz),w=(6+d*80)*(.55+.45*Math.sin(t*.05+y*.7));g.fillStyle=`rgba(255,180,100,${.5-d*.38})`;g.fillRect(sunX-w/2+Math.sin(t*.03+y)*3,y,w,1);}
+  for(let i=0;i<90;i++){const d=i/90,y=hz+2+Math.pow(d,1.4)*(H-hz-4),x=(((hash(i,5)*W*2-this.camX*(.3+d)+t*.15)%(W+40))+W+40)%(W+40)-20;g.fillStyle=`rgba(255,220,190,${.1+.14*Math.sin(t*.04+i)})`;g.fillRect(Math.round(x),Math.round(y),Math.round(2+d*12),1);}
+  g.globalCompositeOperation='source-over';
+  for(const s of this.ships){const P=this.shipPos(s);if(P.x>W+20||P.x+P.w<-20)continue;g.imageSmoothingEnabled=!s.near;const sink=s.sink||0;
+   g.save();g.beginPath();g.rect(P.x-10,0,P.w+20,P.y+2);g.clip();g.translate(P.x,P.y-P.h*.75+sink);if(sink)g.rotate(-.05);g.drawImage(s.img,0,0,P.w,P.h);g.restore();g.imageSmoothingEnabled=false;
+   if(s.burn)for(let i=0;i<4;i++)drawFlame(g,P.x+P.w*(.25+i*.17),P.y-P.h*(.15+(i%2)*.2)+sink,s.near?1.4:.8,t,i*5+s.x);
+   g.fillStyle='rgba(30,26,60,0.6)';g.fillRect(Math.round(P.x-8),Math.round(P.y),Math.round(P.w+16),3);}
+  const boats=this.igaras.map(ig=>({...ig,x:240+ig.ox+Math.sin(t*.012+ig.ph)*8})).concat([{party:true,x:240+this.party.ox,y:this.party.y,ph:0}]).sort((a,b)=>a.y-b.y);
+  for(const b of boats){const bob=Math.sin(t*.06+b.ph)*1.5,y=Math.round(b.y+bob),k=b.party?1.6:(.7+(b.y-170)/150),bw=IMG.igara.width*k,bh=IMG.igara.height*k;
+   if(b.party){State.party.forEach((id,i)=>{const fr=sprites(id).right[0];g.drawImage(fr,Math.round(b.x-36+i*20),y-30);});}
+   else for(let i=0;i<4;i++){const fr=sprites(b.crew).right[0],s=k*.9;g.drawImage(fr,0,0,20,18,Math.round(b.x-bw*.35+i*bw*.2),Math.round(y-15*s),20*s,18*s);
+    const pa=Math.sin(t*.12+i+b.ph);g.strokeStyle='#5a3a22';g.lineWidth=1;g.beginPath();g.moveTo(b.x-bw*.3+i*bw*.2+6*s,y-6*s);g.lineTo(b.x-bw*.3+i*bw*.2+6*s-pa*8*s,y+5*s);g.stroke();}
+   g.drawImage(IMG.igara,Math.round(b.x-bw/2),Math.round(y-bh*.5),bw,bh);
+   g.fillStyle='rgba(28,30,72,0.55)';g.fillRect(Math.round(b.x-bw/2-4),Math.round(y+bh*.3),Math.round(bw+8),2);
+   if(this.speed>.15&&t%8===0)this.fx.add({x:b.x-bw/2,y:y+bh*.3,vx:-.4,vy:0,life:30,color:'#e8e0f0',alpha:.5});}
+  for(const p of this.proj){if(p.cx===undefined)continue;g.fillStyle='#ffd040';g.fillRect(Math.round(p.cx)-1,Math.round(p.cy)-1,2,2);}
+  this.fx.draw(g,0,0,false);
+  const L=this.lights.slice();for(const s of this.ships)if(s.burn){const P=this.shipPos(s);L.push({x:P.x+P.w/2,y:P.y-P.h*.3,r:s.near?160:80,i:.9,color:'#ff8030',glow:.45,flicker:.15,seed:s.x});}
+  for(const l of L)flicker(l,t);applyLighting(g,this.amb,L,0,0);
+  this.fx.draw(g,0,0,true);
+  g.fillStyle='rgba(16,12,36,0.85)';for(let i=0;i<9;i++){const x=(((i*90-this.camX*1.6+t*.4)%(W+120))+W+120)%(W+120)-60;g.beginPath();g.ellipse(x,H+8+Math.sin(t*.05+i)*3,60,14,0,0,Math.PI*2);g.fill();}
+  g.restore();
+ }
+}
+
+/* ---------- campanha naval completa ---------- */
+function* bayCut(mode,setup){yield* fadeTo(1,30);const S=new BayScene(mode);if(setup)setup(S);Game.scene=S;Post.bloom=S.amb.bloom;Post.tilt=S.amb.tilt;UI.letterbox=1;yield* fadeTo(0,40);return S;}
+NODE_CALLS.campanha_naval=function*(){
+ $('#hint').classList.add('hidden');$('#obj').classList.add('hidden');Snd.play('naval');
+ let S=yield* bayCut('partida');UI.banner('Baía de Guanabara','O cerco de Uruçumirim');
+ yield 60;yield* runDialog('naval_partida');
+ S.speed=.25;yield* S.volley(S.ships[0],18);yield 50;
+ UI.letterbox=0;yield* battleSeq('vanguarda');
+ restoreParty(.6);
+ S=yield* bayCut('nau');UI.toast('Os curandeiros das igaras tratam os feridos.');
+ yield 30;yield* runDialog('naval_entre');UI.letterbox=0;
+ yield* battleSeq('nau_capitania');
+ restoreParty(.7);
+ S=yield* bayCut('nau',s=>{s.speed=.15;});
+ yield* S.volley(S.ships[0],24);yield 30;
+ yield* runDialog('naval_abordagem');UI.letterbox=0;
+ yield* battleSeq('capitao');
+ S=yield* bayCut('nau',s=>{s.speed=.08;s.ships[0].burn=true;});
+ yield* runDialog('alvaro_derrota');
+ yield* fadeTo(1,60);Snd.play('creditos');S=new BayScene('epilogo');Game.scene=S;Post.bloom=.85;Post.tilt=.7;yield* fadeTo(0,90);
+ yield* runDialog('naval_epilogo');
+ restoreParty();State.flags.etapa3_fim=true;
+ showEnd('Vitória em Uruçumirim','A BAÍA DE GUANABARA É DOS MIL POVOS',State.flags.destino_alvaro==='poupado'
+  ?'Dom Álvaro foi levado acorrentado para Uruçumirim. Afonso mostrou que a misericórdia também pode ser uma arma.'
+  :'Dom Álvaro foi entregue ao julgamento dos povos que escravizou. A Confederação canta a vitória.');
+ yield()=>!UI.end;
+ yield* fadeTo(1,40);yield* rollCredits();UI.letterbox=0;
+ yield* enterMap('aldeia',{x:20,y:14,dir:'down'});UI.toast('Uruçumirim celebra. Explore à vontade!');
+};
+</script>

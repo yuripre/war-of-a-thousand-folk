@@ -1,0 +1,34 @@
+<script>
+'use strict';
+/* =====================================================================
+   12. TÍTULO, LAÇO PRINCIPAL E INICIALIZAÇÃO
+   ===================================================================== */
+const Title={on:true,sel:0,items:[],
+ build(){this.items=[];if(Save.has())this.items.push(['cont','Continuar']);
+  this.items.push(['new','Novo Jogo — Prólogo'],['vila','Pular para a Aldeia (teste)'],['e3','Pular para a Etapa 3 — Baía (teste)'],['cred','Créditos']);
+  this.sel=0;this.draw();},
+ draw(){$('#tmenu').innerHTML=this.items.map((it,i)=>`<li class="${i===this.sel?'sel':''}">${it[1]}</li>`).join('');},
+ show(){this.on=true;this.build();$('#title').classList.remove('hidden');},
+ update(){if(!this.on)return;let ch=0;if(Input.pressed('up'))ch=-1;if(Input.pressed('down'))ch=1;
+  if(ch){this.sel=(this.sel+ch+this.items.length)%this.items.length;this.draw();}
+  if(!Input.pressed('ok'))return;Input.consume('ok');const id=this.items[this.sel][0];this.on=false;$('#title').classList.add('hidden');
+  if(id==='cred'){Script.run((function*(){yield* fadeTo(1,30);yield* rollCredits();Game.scene=new SideScene('mar');Post.bloom=.7;Post.tilt=.8;Snd.play('titulo');Title.show();yield* fadeTo(0,40);})());return;}
+  if(id==='cont'){const D=Save.load();newGame();Object.assign(State,D.State);State.eqInv=State.eqInv||{};if(!State.equip){State.equip={};for(const h of State.party)State.equip[h]={...DB.actors.find(x=>x.id===h).equip};}if(State.objective)setObjective(State.objective);
+   Script.run((function*(){yield* fadeTo(1,30);yield* enterMap(D.map,D.pos);UI.toast('Jogo carregado.');})());return;}
+  newGame();
+  if(id==='new')Script.run(prologue());
+  else if(id==='e3'){Object.assign(State.flags,{prologo_visto:true,escolha_prologo:'diplomacia',aldeia_chegou:true,missao_trilha:true,trilha_visitada:true,carta_lida:true,bau_trilha_bau3:true,bau_trilha_bau3_luta:true,mirante_visto:true,etapa1_fim:true,tut_batalha:true,jean_falou:true});
+   for(const id of State.party)State.lv[id]=5;restoreParty();State.gold=600;giveItem('carta_lacrada',1);giveItem('beiju',3);giveItem('ervas',2);setObjective('Fale com Aimberê (casa grande) para partir rumo à Baía de Guanabara.');
+   Script.run((function*(){yield* fadeTo(1,30);yield* enterMap('aldeia',{x:21,y:10,dir:'up'});})());}
+  else{State.flags.prologo_visto=true;State.flags.escolha_prologo='firmeza';Script.run((function*(){yield* fadeTo(1,30);yield* enterMap('aldeia',null,true);})());}}};
+function update(){Game.t++;UI.update();Title.update();Script.update();if(Game.scene)Game.scene.update();Input.endFrame();}
+function render(){if(Game.scene)Game.scene.render();postProcess();present();}
+let last=0,acc=0;const STEP=1000/60;
+function loop(ts){if(!last)last=ts;acc+=Math.min(100,ts-last);last=ts;while(acc>=STEP){update();acc-=STEP;}render();requestAnimationFrame(loop);}
+function boot(){resize();Input.init();buildImages();Title.build();
+ const T=new SideScene('mar');Game.scene=T;Post.bloom=.7;Post.tilt=.8;UI.fade=1;Script.run(fadeTo(0,60),false);Snd.play('titulo');
+ window.GAME={DB,State,Game,Script,UI,Snd,Save,enterMap};requestAnimationFrame(loop);}
+boot();
+</script>
+</body>
+</html>

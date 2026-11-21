@@ -1,0 +1,166 @@
+
+<style>
+#menu .list div.dim{opacity:.4}
+#menu .slots div{padding:calc(var(--u)*1.2px) calc(var(--u)*4px);border-radius:calc(var(--u)*2px);display:flex;justify-content:space-between}
+#menu .slots div.sel{background:rgba(232,184,90,.2);color:#fff3d0}
+#menu .slots div i{font-style:normal;opacity:.6;margin-right:6px}
+#menu .pick{margin-top:calc(var(--u)*3px);border-top:1px solid rgba(180,130,60,.35);padding-top:calc(var(--u)*2px)}
+#menu .pick div{display:flex;justify-content:space-between;padding:calc(var(--u)*.8px) calc(var(--u)*4px);border-radius:calc(var(--u)*2px);font-size:.92em}
+#menu .pick div.sel{background:rgba(232,184,90,.25);color:#fff3d0}
+.up{color:#90f090}.dn{color:#ff8a7a}
+#menu .opt div{display:flex;justify-content:space-between;padding:calc(var(--u)*1.5px) calc(var(--u)*5px);border-radius:calc(var(--u)*2px)}
+#menu .opt div.sel{background:rgba(232,184,90,.2);color:#fff3d0}
+.vol b{display:inline-block;width:calc(var(--u)*3px);height:calc(var(--u)*5px);margin-left:2px;background:#4a3a2a;border-radius:1px}.vol b.on{background:#ffd060}
+#shop{position:absolute;inset:6%;background:var(--panel);border:calc(var(--u)*1px) solid var(--edge);border-radius:calc(var(--u)*3px);padding:calc(var(--u)*6px) calc(var(--u)*8px);display:flex;flex-direction:column;font-size:.82em}
+#shop h3{margin:0 0 calc(var(--u)*3px);font-family:Cinzel,serif;color:var(--gold);display:flex;justify-content:space-between}
+#shop .body{flex:1;display:flex;gap:calc(var(--u)*6px);min-height:0}
+#shop .list{flex:0 0 52%;overflow:hidden}
+#shop .list div{display:flex;justify-content:space-between;padding:calc(var(--u)*.8px) calc(var(--u)*4px);border-radius:calc(var(--u)*2px)}
+#shop .list div.sel{background:rgba(232,184,90,.25);color:#fff3d0}
+#shop .list div.no{opacity:.4}
+#shop .det{flex:1;border-left:1px solid rgba(180,130,60,.4);padding-left:calc(var(--u)*6px)}
+#credits{position:absolute;inset:0;overflow:hidden;text-align:center;pointer-events:none}
+#credits .roll{position:absolute;left:0;right:0;top:0}
+#credits h1{font-family:Cinzel,serif;font-weight:800;font-size:2.6em;margin:0;color:#ffe6b0;text-shadow:0 0 18px rgba(255,120,40,.9),0 3px 0 #2a1008}
+#credits h2{font-family:Cinzel,serif;font-size:.95em;letter-spacing:.3em;color:var(--gold);margin:calc(var(--u)*22px) 0 calc(var(--u)*4px)}
+#credits p{margin:calc(var(--u)*1.5px) auto;max-width:70%;text-shadow:0 1px 2px #000,0 0 8px #000}
+#credits .cast{display:flex;justify-content:center;gap:calc(var(--u)*14px);margin-top:calc(var(--u)*4px)}
+#credits .cast div{font-size:.8em}#credits .cast img{width:calc(var(--u)*30px);image-rendering:pixelated;display:block;margin:0 auto calc(var(--u)*2px)}
+#credits .note{font-style:italic;font-size:.82em;opacity:.9}
+#credits .fim{font-family:Cinzel,serif;font-size:2.2em;color:#ffe6b0;margin-top:calc(var(--u)*40px)}
+#title .snd{font-size:.6em;opacity:.6;margin-top:calc(var(--u)*8px)}
+</style>
+<script>
+'use strict';
+/* =====================================================================
+   11. ETAPA 4 — equipamento, loja, opções, salvamento, créditos e som
+   ===================================================================== */
+/* ---------- equipamento ---------- */
+function eqOf(id){return(State.equip&&State.equip[id])||DB.actors.find(a=>a.id===id).equip;}
+function paramsWith(id,slot,item){const cur=State.equip[id],bak=cur[slot];cur[slot]=item;const p=heroParams(id);cur[slot]=bak;return p;}
+const STATL={mhp:'HP',mmp:'MP',atk:'ATQ',def:'DEF',mat:'MAG',mdf:'RES',agi:'AGI',luk:'SOR'};
+function diffStr(a,b){return Object.keys(STATL).map(k=>{const d=(b[k]||0)-(a[k]||0);return d?`<span class="${d>0?'up':'dn'}">${STATL[k]} ${d>0?'+':''}${d}</span>`:'';}).filter(Boolean).join(' ')||'<span style="opacity:.5">sem mudança</span>';}
+const SLOTN={weapon:'Arma',armor:'Traje',acc:'Acessório'};
+
+/* ---------- menu completo (substitui o da Etapa 1, mesma interface) ---------- */
+Object.assign(Menu,{tabs:['Grupo','Itens','Equipar','Bestiário','Opções'],mode:'list',slot:0,psel:0,
+ open(){UI.menu=true;this.sel=0;this.mode='list';$('#menu').classList.remove('hidden');this.render();},
+ list(){if(this.tab===0||this.tab===2)return State.party.map(id=>DB.actors.find(a=>a.id===id));if(this.tab===1)return Object.keys(State.inv).filter(k=>State.inv[k]>0);if(this.tab===3)return DB.enemies;return this.opts();},
+ opts(){return[{id:'mus',label:'Música',vol:'music'},{id:'sfx',label:'Efeitos sonoros',vol:'sfx'},{id:'mute',label:'Som',val:Snd.muted?'Desligado':'Ligado'},{id:'save',label:'Salvar jogo agora',val:Game.scene instanceof Field?'':'(só no mapa)'},{id:'info',label:'Controles',val:'Setas · Shift · Z · X · C · Q/E · M'}];},
+ picks(){const h=this.list()[this.sel],slot=['weapon','armor','acc'][this.slot];const L=Object.keys(State.eqInv||{}).filter(k=>State.eqInv[k]>0&&DB.equips[k].slot===slot&&DB.equips[k].for.includes(h.id));if(slot==='acc'&&State.equip[h.id].acc)L.unshift(null);return L;},
+ update(){const L=this.list(),n=L.length;
+  if(this.mode==='slot'||this.mode==='pick'){const h=L[this.sel];
+   if(this.mode==='slot'){if(Input.pressed('up'))this.slot=(this.slot+2)%3;if(Input.pressed('down'))this.slot=(this.slot+1)%3;
+    if(Input.pressed('cancel')||Input.pressed('menu'))this.mode='list';else if(Input.pressed('ok')){this.mode='pick';this.psel=0;}}
+   else{const P=this.picks();if(P.length){if(Input.pressed('up'))this.psel=(this.psel+P.length-1)%P.length;if(Input.pressed('down'))this.psel=(this.psel+1)%P.length;}
+    if(Input.pressed('cancel')||Input.pressed('menu'))this.mode='slot';
+    else if(Input.pressed('ok')&&P.length){const slot=['weapon','armor','acc'][this.slot],it=P[this.psel],old=State.equip[h.id][slot];
+     if(old)State.eqInv[old]=(State.eqInv[old]||0)+1;if(it)State.eqInv[it]--;State.equip[h.id][slot]=it;
+     const p=heroParams(h.id);State.hp[h.id]=Math.min(State.hp[h.id],p.mhp);State.mp[h.id]=Math.min(State.mp[h.id],p.mmp);sfx('item');this.mode='slot';}}
+   Input.consume('ok');this.render();return;}
+  if(Input.pressed('cancel')||Input.pressed('menu')){this.close();return;}
+  if(Input.pressed('left')){this.tab=(this.tab+4)%5;this.sel=0;}
+  if(Input.pressed('right')){this.tab=(this.tab+1)%5;this.sel=0;}
+  if(Input.pressed('up')&&n)this.sel=(this.sel+n-1)%n;
+  if(Input.pressed('down')&&n)this.sel=(this.sel+1)%n;
+  if(this.tab===4){const o=L[this.sel];let d=0;if(Input.pressed('bup'))d=1;if(Input.pressed('bdown'))d=-1;if(Input.pressed('ok')&&o.vol)d=Snd.vol[o.vol]>=10?-10:1;
+   if(d&&o.vol){Snd.vol[o.vol]=clamp(Snd.vol[o.vol]+d,0,10);Snd.applyVol();Snd.persist();sfx('cursor');}
+   if(Input.pressed('ok')){if(o.id==='mute')Snd.toggleMute();if(o.id==='save'){if(Game.scene instanceof Field&&!Script.busy)UI.toast(Save.save()?'Jogo salvo.':'Não foi possível salvar.');else UI.toast('Só é possível salvar explorando o mapa.');}}}
+  if(this.tab===2&&Input.pressed('ok')){this.mode='slot';this.slot=0;}
+  if(this.tab===1&&Input.pressed('ok')&&n)this.useItem(L[this.sel]);
+  Input.consume('ok');this.render();},
+ useItem(k){const it=DB.items[k],ef=it.effect||{};if(it.type!=='consumivel'||!(ef.hp||ef.mp||ef.cure)){UI.toast('Este item só pode ser usado em batalha.');return;}
+  const ids=State.party.slice().sort((a,b)=>ef.mp?State.mp[a]/heroParams(a).mmp-State.mp[b]/heroParams(b).mmp:State.hp[a]/heroParams(a).mhp-State.hp[b]/heroParams(b).mhp),id=ids[0],p=heroParams(id);
+  if(ef.hp)State.hp[id]=Math.min(p.mhp,State.hp[id]+ef.hp);if(ef.mp)State.mp[id]=Math.min(p.mmp,State.mp[id]+ef.mp);State.inv[k]--;sfx('heal');UI.toast(`${it.name} → ${DB.actors.find(a=>a.id===id).name}`);
+  this.sel=Math.min(this.sel,Math.max(0,this.list().length-1));},
+ render(){const L=this.list(),el=$('#menu'),E=Object.fromEntries(DB.system.elements.map(e=>[e.id,e]));
+  const tag=e=>E[e]?`<span class="tag">${E[e].icon} ${E[e].name}</span>`:'';let list='',det='';
+  const heroRow=(a,i)=>`<div class="${i===this.sel?'sel':''}"><img src="${portrait(a.id)}">${a.name}<small style="margin-left:auto;opacity:.7">Nv ${State.lv[a.id]}</small></div>`;
+  if(this.tab===0){list=L.map(heroRow).join('');const a=L[this.sel],q=heroParams(a.id),lv=State.lv[a.id],eq=eqOf(a.id);
+   det=`<h3>${a.name} <small style="font-size:.6em;opacity:.7">Nv ${lv} · EXP ${State.exp[a.id]}/${expNext(lv)}</small></h3><div class="cls">${a.class} — ${a.role} · ${a.origin}</div><div>${a.bio}</div>
+   <div class="stats">${Object.entries(STATL).map(([k,nm])=>`<span><i>${nm}</i>${k==='mhp'?State.hp[a.id]+'/'+q[k]:k==='mmp'?State.mp[a.id]+'/'+q[k]:q[k]}</span>`).join('')}</div>
+   <div class="sk" style="opacity:.8">${['weapon','armor','acc'].map(s=>`${SLOTN[s]}: ${eq[s]?DB.equips[eq[s]].name:'—'}`).join(' · ')}</div>
+   ${a.skills.map(s=>{const k=DB.skills[s];return`<div class="sk"><b>${k.name}</b> ${tag(k.element)}<small>${k.cost?k.cost+' MP':''}</small> — ${k.desc}</div>`;}).join('')}`;}
+  else if(this.tab===1){list=L.length?L.map((k,i)=>`<div class="${i===this.sel?'sel':''}">${itemName(k)}<span style="margin-left:auto">×${State.inv[k]}</span></div>`).join(''):'<div>(vazio)</div>';
+   const k=L[this.sel];if(k){const it=DB.items[k];det=`<h3>${it.name}</h3><div class="cls">Tipo: ${it.type}</div><div>${it.desc}</div><p style="opacity:.6;font-size:.85em">${it.type==='consumivel'?'ENTER: usar no herói que mais precisa.':''}</p>`;}
+   det+=`<p style="opacity:.75">Cruzados: <b>${State.gold||0}</b></p>`;}
+  else if(this.tab===2){list=L.map(heroRow).join('');const a=L[this.sel],eq=State.equip[a.id],q=heroParams(a.id);
+   det=`<h3>${a.name}</h3><div class="slots">${['weapon','armor','acc'].map((s,i)=>`<div class="${this.mode!=='list'&&i===this.slot?'sel':''}"><span><i>${SLOTN[s]}</i>${eq[s]?DB.equips[eq[s]].name:'—'}</span><small>${eq[s]&&DB.equips[eq[s]].element?tag(DB.equips[eq[s]].element):''}</small></div>`).join('')}</div>
+   <div class="stats">${Object.entries(STATL).map(([k,nm])=>`<span><i>${nm}</i>${q[k]}</span>`).join('')}</div>`;
+   if(this.mode==='pick'){const P=this.picks(),slot=['weapon','armor','acc'][this.slot];det+=`<div class="pick">${P.length?P.map((it,i)=>`<div class="${i===this.psel?'sel':''}"><span>${it?DB.equips[it].name+' ×'+State.eqInv[it]:'(remover)'}</span><small>${diffStr(q,paramsWith(a.id,slot,it))}</small></div>`).join(''):'<div style="opacity:.6">Nenhum item compatível na bolsa.</div>'}</div>`;
+    const it=P[this.psel];if(it)det+=`<div class="sk" style="opacity:.8">${DB.equips[it].desc}</div>`;}
+   else det+=`<p style="opacity:.6;font-size:.85em">${this.mode==='list'?'ENTER: escolher espaço de equipamento.':'↑↓ espaço · ENTER trocar · X voltar'}</p>`;}
+  else if(this.tab===3){list=L.map((e,i)=>`<div class="${i===this.sel?'sel':''}">${e.name}</div>`).join('');const e=L[this.sel];
+   det=`<h3>${e.name}</h3><div class="cls">${e.habitat}</div><div>${e.desc}</div><div class="stats"><span><i>HP</i>${e.hp}</span><span><i>ATQ</i>${e.atk}</span><span><i>DEF</i>${e.def}</span><span><i>AGI</i>${e.agi}</span></div>
+   <div class="sk"><b>Escudo (Break):</b> ${'◆'.repeat(e.shield)} (${e.shield})</div><div class="sk"><b>Fraquezas:</b> ${e.weak.map(w=>((State.known[e.id]||[]).includes(w))?tag(w):'<span class="tag">?</span>').join('')}</div>`;}
+  else{list='<div class="opt">'+L.map((o,i)=>`<div class="${i===this.sel?'sel':''}"><span>${o.label}</span><span>${o.vol?`<span class="vol">${Array.from({length:10},(_,k)=>`<b class="${k<Snd.vol[o.vol]?'on':''}"></b>`).join('')}</span>`:(o.val||'')}</span></div>`).join('')+'</div>';
+   det=`<h3>Opções</h3><p>Q / E ajustam o volume. ENTER alterna o som ou salva. A tecla M liga/desliga o som em qualquer momento.</p><p style="opacity:.7">O jogo também salva automaticamente ao trocar de mapa e ao descansar na fogueira.</p>`;}
+  el.innerHTML=`<div class="tabs">${this.tabs.map((t,i)=>`<span class="${i===this.tab?'on':''}">${t}</span>`).join('')}<small>←→ abas · ↑↓ · ENTER · C/Esc fechar</small></div><div class="body"><div class="list">${list}</div><div class="det">${det}</div></div>`;}});
+
+/* ---------- loja ---------- */
+const Shop={on:false,sel:0,
+ *run(id){const S=DB.system.shops[id];this.S=S;this.on=true;this.sel=0;const d=document.createElement('div');d.id='shop';document.querySelector('.ui').appendChild(d);this.render();yield()=>!this.on;d.remove();},
+ price(k){return(DB.items[k]||DB.equips[k]).price;},
+ owned(k){return DB.equips[k]?(State.eqInv[k]||0)+State.party.filter(h=>Object.values(State.equip[h]).includes(k)).length:(State.inv[k]||0);},
+ update(){const G=this.S.goods,n=G.length;if(Input.pressed('up'))this.sel=(this.sel+n-1)%n;if(Input.pressed('down'))this.sel=(this.sel+1)%n;
+  if(Input.pressed('cancel')||Input.pressed('menu')){this.on=false;Input.consume('cancel');return;}
+  if(Input.pressed('ok')){Input.consume('ok');const k=G[this.sel],p=this.price(k);if((State.gold||0)>=p){State.gold-=p;giveItem(k,1);sfx('buy');UI.toast(`Comprou ${itemName(k)}.`);}else{sfx('cancel');UI.toast('Cruzados insuficientes.');}}
+  this.render();},
+ render(){const el=$('#shop');if(!el)return;const G=this.S.goods,k=G[this.sel],eq=DB.equips[k],it=DB.items[k]||eq;
+  el.innerHTML=`<h3><span>${this.S.name}</span><span>Cruzados: ${State.gold||0}</span></h3><div class="body"><div class="list">${G.map((g,i)=>`<div class="${i===this.sel?'sel':''} ${this.price(g)>(State.gold||0)?'no':''}"><span>${itemName(g)}</span><span>${this.price(g)}</span></div>`).join('')}</div>
+  <div class="det"><h3 style="font-size:1em">${it.name}</h3><div>${it.desc}</div><p style="opacity:.75">Possui: ${this.owned(k)}</p>
+  ${eq?`<p style="opacity:.85">${SLOTN[eq.slot]} para: ${eq.for.map(h=>DB.actors.find(a=>a.id===h).name).join(', ')}</p>${eq.for.filter(h=>State.party.includes(h)).map(h=>`<div class="sk">${DB.actors.find(a=>a.id===h).name}: ${diffStr(heroParams(h),paramsWith(h,eq.slot,k))}</div>`).join('')}`:''}
+  <p style="opacity:.55;font-size:.85em">ENTER comprar · X sair</p></div></div>`;}};
+
+/* ---------- salvamento (localStorage) ---------- */
+const Save={key:'gdmp_save_v1',
+ save(){try{const F=Game.scene;if(!(F instanceof Field))return false;const data={v:1,State:JSON.parse(JSON.stringify(State)),map:F.id,pos:{x:(F.leader.x-8)/TS,y:(F.leader.y-12)/TS,dir:F.leader.dir},t:Date.now()};localStorage.setItem(this.key,JSON.stringify(data));return true;}catch(e){return false;}},
+ load(){try{return JSON.parse(localStorage.getItem(this.key)||'null');}catch(e){return null;}},
+ has(){return!!this.load();}};
+
+/* ---------- créditos finais ---------- */
+function* rollCredits(){
+ const S=new BayScene('epilogo');S.speed=.2;Game.scene=S;Post.bloom=.85;Post.tilt=.7;UI.letterbox=1;$('#hint').classList.add('hidden');$('#obj').classList.add('hidden');Snd.play('creditos');
+ const d=document.createElement('div');d.id='credits';const cast=['afonso','aiyra','kaiyke','heloisa'].map(id=>{const a=DB.actors.find(x=>x.id===id);return`<div><img src="${portrait(id)}">${a.name}<br><small>${a.class}</small></div>`;}).join('');
+ d.innerHTML=`<div class="roll"><h1>Guerra dos Mil Povos</h1><p>Protótipo JRPG 2D-HD</p><p class="note">Baseado no livro “Guerra dos Mil Povos”, de Víktor Waewell</p>
+ <h2>O GRUPO</h2><div class="cast">${cast}</div>
+ <h2>COM</h2><p>Aimberê, morubixaba de Uruçumirim · Pajé Guyrá · Jean, o truchement de Rouen</p><p>Anciã Potira · Jandira · Guaraci · Cauã · Jaci · Ubiratã</p><p>e Dom Álvaro Teles de Meneses, Capitão-mor</p>
+ <h2>DIREÇÃO DE ARTE</h2><p>Pixel art inteiramente gerada por código</p><p>Iluminação dinâmica · sombras projetadas · bloom · profundidade de campo</p>
+ <h2>TRILHA SONORA</h2><p>Música procedural em Web Audio</p><p>Flauta de taquara · violão ibérico (Karplus-Strong) · maracá · tambor</p><p class="note">${Object.values(DB.music).map(m=>'“'+m.name+'”').join(' · ')}</p>
+ <h2>SISTEMAS</h2><p>Combate por turnos com Quebra (Break) e Impulso (Boost)</p><p>Batalha naval com Fúria da Frota, flechas de fogo e colmeias de abelhas</p>
+ <h2>NOTA HISTÓRICA</h2><p class="note">A Confederação dos Tamoios (c. 1554–1567) uniu povos Tupinambá do litoral entre Cabo Frio e Bertioga, aliados a franceses, contra a escravização praticada por colonos portugueses. Em 1567, as forças de Mem de Sá e Estácio de Sá venceram em Uruçumirim. Esta história imagina outra tarde naquela baía.</p>
+ <h2>TECNOLOGIA</h2><p>HTML5 Canvas · Web Audio API · dados em JSON prontos para RPG Maker</p><p class="note">Protótipo desenvolvido com o auxílio do Claude (Anthropic)</p>
+ <div class="fim">Fim</div><p>Obrigado por jogar.</p><p class="note" style="margin-top:calc(var(--u)*6px)">Pressione ENTER</p></div>`;
+ document.querySelector('.ui').appendChild(d);const roll=d.querySelector('.roll'),u=()=>parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--u'))||3;
+ yield* fadeTo(0,60);let y=H;const endY=()=>-(roll.offsetHeight/u())+H*.62;
+ while(y>endY()){y-=Input.held('ok')?1.4:.32;roll.style.transform=`translateY(${y*u()}px)`;yield 1;}
+ yield()=>Input.pressed('ok');Input.consume('ok');yield* fadeTo(1,60);d.remove();UI.letterbox=0;
+}
+
+/* ---------- ganchos de som e música (envolvem funções existentes) ---------- */
+(function(){
+ const P=Battle.prototype,wrapGen=(obj,k,pre,post)=>{const f=obj[k];obj[k]=function*(...a){if(pre)pre.apply(this,a);const r=yield* f.apply(this,a);if(post)post.apply(this,a);return r;};};
+ const _hit=P.hit;P.hit=function(att,t,...a){const hp=t.hp,br=t.breakT;_hit.call(this,att,t,...a);if(t.hp<hp){if(t.breakT>0&&br===0)sfx('break');else sfx(t.side==='enemy'&&a[1]&&t.weak.includes(a[1])?'weak':'hit');if(t.hp<=0&&t.side==='enemy')sfx(t.ship?'cannon':'death');}};
+ const _fxHit=P.fxHit;P.fxHit=function(a,t,el){sfx(el==='fogo'?'fire':el==='contusao'?'hit':'slash');return _fxHit.call(this,a,t,el);};
+ wrapGen(P,'fxShot',()=>sfx('arrow'));wrapGen(P,'fxGun',()=>sfx('gun'));wrapGen(P,'fxCannon',()=>sfx('cannon'),function(){if(this.bg.sea)sfx('splash');});
+ wrapGen(P,'throwBomb',null,(u,tg,hive)=>sfx(hive?'bees':'explosion'));
+ wrapGen(P,'fleetFx',()=>sfx('volley'),o=>sfx(o.element==='fogo'?'fire':'bees'));
+ const _heal=P.heal;P.heal=function(...a){sfx('heal');return _heal.apply(this,a);};
+ wrapGen(P,'exec',(u,a)=>{if(a.boost>0)sfx('boost');if(a.kind==='flee')sfx('flee');});
+ wrapGen(P,'main',function(){Snd.play(this.T.bgm||'batalha',true);});
+ wrapGen(P,'finish',r=>Snd.play(r==='win'?'vitoria':'derrota'));
+ const SP=SideScene.prototype,_sh=SP.shoot,_bm=SP.boom,_fr=SP.fire;SP.shoot=function(...a){sfx('arrow');return _sh.apply(this,a);};SP.boom=function(...a){sfx('explosion');return _bm.apply(this,a);};SP.fire=function(...a){sfx('fire');return _fr.apply(this,a);};
+ wrapGen(BayScene.prototype,'volley',()=>sfx('volley'),()=>sfx('fire'));
+ const _toast=UI.toast;UI.toast=function(t){if(/^Obteve/.test(t))sfx('item');return _toast.call(this,t);};
+ const _dt=UI.drawText;UI.drawText=function(){const d=this.d;if(d&&!d.narr){const k=Math.floor(d.shown/3);if(k!==d._bk&&d.shown<d.text.length){d._bk=k;sfx('blip');}}return _dt.call(this);};
+ const _blk=UI.blocking;UI.blocking=function(){return _blk.call(this)||Shop.on;};
+ const _upd=UI.update;UI.update=function(){if(Shop.on&&!this.d){if(this.toastT>0&&--this.toastT===0)$('#toast').classList.remove('show');Shop.update();return;}return _upd.call(this);};
+ const _em=enterMap;enterMap=function*(id,spawn,first){const M=DB.maps[id];if(M&&M.bgm)Snd.play(M.bgm);yield* _em(id,spawn,first);Save.save();};
+ const _bs=battleSeq;battleSeq=function*(troop,opts){const prev=Snd.curId;sfx('encounter');const r=yield* _bs(troop,opts);if(Game.scene instanceof Field)Snd.play(Game.scene.M.bgm);else if(prev)Snd.play(prev);return r;};
+ const _pb=prologueBeach;prologueBeach=function*(){Snd.play('titulo');yield* _pb();};
+ addEventListener('keydown',e=>{Snd.resume();if(e.code==='KeyM'){Snd.toggleMute();return;}
+  const a=Input.map[e.code];if(!a||e.repeat)return;const B=Game.scene,inCmd=B&&B.cmd&&!B.cmd.done;
+  if(!(Title.on||UI.d||UI.menu||Shop.on||inCmd||UI.end))return;
+  if(a==='ok')sfx(UI.d?'cursor':'confirm');else if(a==='cancel')sfx('cancel');else if(['up','down','left','right','bup','bdown'].includes(a))sfx('cursor');});
+})();
+</script>

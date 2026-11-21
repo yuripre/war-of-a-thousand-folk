@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guerra dos Mil Povos — versão completa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--u:3;--ink:#f3e6c8;--gold:#e8b85a;--edge:#b4823c;--panel:rgba(20,11,15,.97)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#07050a;overflow:hidden;color:var(--ink);font-family:Alegreya,Georgia,serif}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;overflow:hidden;background:#000;box-shadow:0 0 80px #000}
+#screen{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}
+.ui{position:absolute;inset:0;pointer-events:none;font-size:calc(var(--u)*7.4px);line-height:1.35}
+.hidden{display:none!important}
+/* Diálogo */
+#dialog{position:absolute;left:4%;right:4%;bottom:4%;min-height:25%;display:flex;gap:calc(var(--u)*6px);padding:calc(var(--u)*6px) calc(var(--u)*8px);
+ background:linear-gradient(180deg,rgba(34,18,22,.94),rgba(12,7,11,.95));border:calc(var(--u)*1px) solid var(--edge);border-radius:calc(var(--u)*3px);
+ box-shadow:0 0 0 calc(var(--u)*.7px) #2a1a10,inset 0 0 calc(var(--u)*16px) rgba(255,160,70,.13),0 calc(var(--u)*3px) calc(var(--u)*12px) rgba(0,0,0,.6)}
+#dialog.noport .pframe{display:none}
+#dialog.top{top:13%;bottom:auto;min-height:0}
+.pframe{flex:0 0 auto;width:calc(var(--u)*40px);height:calc(var(--u)*36px);border:calc(var(--u)*.7px) solid var(--edge);border-radius:calc(var(--u)*2px);overflow:hidden;
+ background:radial-gradient(circle at 50% 40%,#5a3424,#1a0c0a)}
+.pframe img{width:100%;image-rendering:pixelated;display:block}
+.dbody{flex:1;min-width:0}
+#dname{font-family:Cinzel,serif;font-weight:800;letter-spacing:.06em;font-size:1.02em;margin-bottom:calc(var(--u)*2px);text-shadow:0 0 6px rgba(0,0,0,.8)}
+#dtext{white-space:pre-wrap;text-shadow:0 1px 0 #000}
+#dchoices{list-style:none;margin:calc(var(--u)*3px) 0 0;padding:0}
+#dchoices li{padding:calc(var(--u)*1px) calc(var(--u)*4px);border-radius:calc(var(--u)*2px);opacity:.75}
+#dchoices li.sel{opacity:1;background:linear-gradient(90deg,rgba(232,184,90,.28),transparent);color:#fff3d0}
+#dchoices li.sel::before{content:'➤ ';color:var(--gold)}
+#dnext{position:absolute;right:calc(var(--u)*6px);bottom:calc(var(--u)*3px);color:var(--gold);animation:bob 1s infinite}
+@keyframes bob{50%{transform:translateY(calc(var(--u)*-1.5px))}}
+/* Narração */
+#narr{position:absolute;left:10%;right:10%;top:50%;transform:translateY(-50%);text-align:center;font-style:italic;font-size:1.15em;opacity:0;transition:opacity .5s;text-shadow:0 0 10px #000,0 0 3px #000}
+#narr.on{opacity:1}
+/* HUD */
+#obj{position:absolute;left:2.5%;top:3.5%;max-width:42%;padding:calc(var(--u)*3px) calc(var(--u)*6px);font-size:.78em;background:linear-gradient(90deg,rgba(14,8,10,.8),rgba(14,8,10,0));border-left:calc(var(--u)*1px) solid var(--gold)}
+#obj b{display:block;font-family:Cinzel,serif;color:var(--gold);font-size:.85em;letter-spacing:.1em}
+#obj.flash{animation:flash 1.2s}
+@keyframes flash{0%,40%{background:linear-gradient(90deg,rgba(232,184,90,.5),rgba(14,8,10,0))}}
+#banner{position:absolute;left:0;right:0;top:20%;text-align:center;opacity:0;transition:opacity 1s}
+#banner.show{opacity:1}
+#banner .bt{font-family:Cinzel,serif;font-weight:800;font-size:2em;letter-spacing:.12em;color:#ffe9c0;text-shadow:0 0 14px rgba(255,140,50,.8),0 2px 0 #000}
+#banner .bs{font-style:italic;opacity:.85;margin-top:calc(var(--u)*1px)}
+#banner .bt::before,#banner .bt::after{content:'';display:inline-block;width:calc(var(--u)*30px);height:1px;background:var(--gold);vertical-align:middle;margin:0 calc(var(--u)*6px)}
+#toast{z-index:6;position:absolute;left:50%;top:12%;transform:translateX(-50%);padding:calc(var(--u)*3px) calc(var(--u)*9px);background:var(--panel);border:1px solid var(--edge);border-radius:calc(var(--u)*2px);opacity:0;transition:opacity .4s;white-space:nowrap}
+#toast.show{opacity:1}
+#hint{position:absolute;right:2%;bottom:2%;font-size:.6em;opacity:.55;text-align:right}
+/* Menu */
+#menu{position:absolute;inset:5%;background:var(--panel);border:calc(var(--u)*1px) solid var(--edge);border-radius:calc(var(--u)*3px);padding:calc(var(--u)*6px) calc(var(--u)*8px);display:flex;flex-direction:column;font-size:.85em}
+#menu .tabs{display:flex;gap:calc(var(--u)*4px);margin-bottom:calc(var(--u)*4px);font-family:Cinzel,serif}
+#menu .tabs span{padding:calc(var(--u)*1px) calc(var(--u)*6px);border-bottom:2px solid transparent;opacity:.6}
+#menu .tabs span.on{opacity:1;border-color:var(--gold);color:var(--gold)}
+#menu .tabs small{margin-left:auto;opacity:.5;font-family:Alegreya}
+#menu .body{flex:1;display:flex;gap:calc(var(--u)*6px);min-height:0}
+#menu .list{flex:0 0 34%;overflow:hidden}
+#menu .list div{padding:calc(var(--u)*1.5px) calc(var(--u)*4px);border-radius:calc(var(--u)*2px);display:flex;align-items:center;gap:calc(var(--u)*4px)}
+#menu .list div.sel{background:rgba(232,184,90,.2);color:#fff3d0}
+#menu .list img{width:calc(var(--u)*14px);image-rendering:pixelated}
+#menu .det{flex:1;overflow:hidden;border-left:1px solid rgba(180,130,60,.4);padding-left:calc(var(--u)*6px)}
+#menu h3{font-family:Cinzel,serif;margin:0;color:var(--gold);font-size:1.15em}
+#menu .cls{font-style:italic;opacity:.8;margin-bottom:calc(var(--u)*2px)}
+#menu .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*1px) calc(var(--u)*6px);margin:calc(var(--u)*3px) 0;font-size:.9em}
+#menu .stats i{font-style:normal;opacity:.6;margin-right:4px}
+#menu .sk{font-size:.85em;margin:calc(var(--u)*1px) 0}
+#menu .sk b{color:#ffe3a8}
+#menu .tag{display:inline-block;font-size:.8em;padding:0 calc(var(--u)*2px);border:1px solid rgba(232,184,90,.5);border-radius:3px;margin-right:3px}
+/* Título / fim */
+#title,#endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 60%,transparent 30%,rgba(0,0,0,.55))}
+#title h1,#endcard h1{font-family:Cinzel,serif;font-weight:800;font-size:3.1em;margin:0;letter-spacing:.08em;color:#ffe6b0;text-shadow:0 0 22px rgba(255,120,40,.9),0 3px 0 #2a1008}
+#title h2,#endcard h2{font-family:Cinzel,serif;font-weight:600;font-size:1em;margin:calc(var(--u)*2px) 0 calc(var(--u)*14px);letter-spacing:.3em;opacity:.9}
+#title .by{font-style:italic;opacity:.75;font-size:.8em;margin-bottom:calc(var(--u)*10px)}
+#title ul{list-style:none;padding:0;margin:0}
+#title li{padding:calc(var(--u)*1.5px) calc(var(--u)*8px);opacity:.6}
+#title li.sel{opacity:1;color:#fff0c8;text-shadow:0 0 8px rgba(255,160,60,.9)}
+#title li.sel::before{content:'❖ ';color:var(--gold)}
+#title .keys{position:absolute;bottom:5%;font-size:.6em;opacity:.6}
+#endcard{background:rgba(5,2,6,.82)}
+#endcard p{max-width:70%;font-style:italic;opacity:.85}
+#endcard .k{margin-top:calc(var(--u)*10px);animation:bob 1.2s infinite;color:var(--gold)}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+ <canvas id="screen"></canvas>
+ <div class="ui">
+  <div id="obj" class="hidden"><b>OBJETIVO</b><span></span></div>
+  <div id="banner"><div class="bt"></div><div class="bs"></div></div>
+  <div id="toast"></div>
+  <div id="hint" class="hidden">Setas/WASD mover · Shift correr · Z/Enter interagir · C/Tab menu</div>
+  <div id="narr"><p></p></div>
+  <div id="dialog" class="hidden"><div class="pframe"><img id="pimg" alt=""></div><div class="dbody"><div id="dname"></div><div id="dtext"></div><ul id="dchoices"></ul></div><div id="dnext">▼</div></div>
+  <div id="menu" class="hidden"></div>
+  <div id="endcard" class="hidden"><h1>Fim do Capítulo I</h1><h2>A GUERRA ESTÁ APENAS COMEÇANDO</h2>
+   <p>A seguir, na Etapa 3: a batalha naval na Baía de Guanabara — igaras contra naus, flechas de fogo, colmeias de abelhas e o duelo contra o Capitão Dom Álvaro.</p>
+   <div class="k">Pressione ENTER para continuar explorando</div></div>
+  <div id="title"><h1>Guerra dos Mil Povos</h1><h2>PRÓLOGO · A CHEGADA DA NAU</h2>
+   <div class="by">Protótipo JRPG 2D-HD · versão 1.0 · baseado no livro de Víktor Waewell</div>
+   <ul id="tmenu"></ul><div class="snd">♪ Pressione qualquer tecla para ativar o som · M liga/desliga</div>
+   <div class="keys">↑↓ escolher · ENTER confirmar</div></div>
+ </div>
+</div></div>

@@ -1,0 +1,56 @@
+
+<!-- Mapas: tiles ASCII (legenda em system.tiles) + objetos + eventos (equivalente aos Events do RPG Maker). Coordenadas em tiles. -->
+<script type="application/json" data-db="maps">
+{
+ "aldeia":{"bgm":"aldeia","name":"Aldeia de Uruçumirim","subtitle":"Baía de Guanabara · Confederação dos Tamoios","width":40,"height":28,"fill":"T",
+  "ambient":{"color":"rgba(46,18,60,0.40)","grade":["#ff9a4a","#5a2a6a"],"gradeAlpha":0.24,"sun":[0.92,0.3,0.85],"shadowAlpha":0.34,"bloom":0.42,"tilt":1,"rays":"warm","fireflies":10,"leaves":0.04,"canopy":false},
+  "tiles":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT","TTbT..b.....T..T...T.......bTTb...T...TT","TTbT################################T.TT","TT.T#...........w........,......w..#T.TT","TTT.#..w.,,,w..............f.......#b.TT","TT..#...,.....,....................#..TT","TT..#..............................#..TT","TT.T#..............::..w..w.......,#.TTT","TT..#.w............::f..........f..#bTTT","TTT.#...,......::::::::::,......w..#TTTT","TT.b#....ff,...::::::::::..f.......#..TT","TT..#f,..:::::::::::::::::::::::::::::::","TTTT#....:::::::::::::::::::::::::::::::","TT.b#..........::::::::::.........,#T.TT","TTTb#.........f..,.::,.............#..TT","TTbb#.........w,...::..............#..TT","TTTT#.f.........w..::............,.#b.TT","TT..#....,.........::....f.w.,.....#T.TT","TTT.#....w....,.w..::...w,..,......#b.TT","TT..###############::###############..TT","sPssssssssssssPssss::ssssPsssssssssssPss","sssssssssssssssssss::sssssssssssssssssss","sssPsssssssssssssssssssssssssssssPssssss","~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~","~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~","~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~","~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"],
+  "objects":[
+   {"type":"casa_grande","x":17,"y":7},{"type":"oca","x":7,"y":8},{"type":"oca","x":28,"y":8},{"type":"oca","x":7,"y":17},{"type":"oca","x":28,"y":17},
+   {"type":"fogueira","x":19,"y":12},{"type":"tocha","x":17,"y":9},{"type":"tocha","x":22,"y":9},{"type":"tocha","x":14,"y":10},{"type":"tocha","x":25,"y":14},{"type":"tocha","x":34,"y":11},{"type":"tocha","x":34,"y":14},
+   {"type":"moquem","x":11,"y":14},{"type":"igacaba","x":13,"y":8},{"type":"igacaba","x":26,"y":18},{"type":"igacaba","x":12,"y":18},
+   {"type":"igara","x":5,"y":22},{"type":"igara","x":24,"y":22},{"type":"igara","x":30,"y":23}
+  ],
+  "events":[
+   {"id":"aimbere","kind":"npc","x":21,"y":9,"speaker":"aimbere","dir":"down","dialog":[{"if":"aimbere_presente","id":"aimbere_6"},{"if":"vitoria_guanabara","id":"aimbere_5"},{"if":"etapa1_fim","id":"conselho"},{"if":"missao_trilha","id":"aimbere_2"},{"id":"aimbere_1"}]},
+   {"id":"paje","kind":"npc","x":11,"y":9,"speaker":"paje","dir":"down","dialog":[{"if":"paje_ervas","id":"paje_2"},{"id":"paje_1"}]},
+   {"id":"jean","kind":"npc","x":27,"y":10,"speaker":"jean","dir":"left","dialog":[{"if":"jean_falou","id":"jean_loja"},{"id":"jean_1"}]},
+   {"id":"potira","kind":"npc","x":13,"y":14,"speaker":"potira","dir":"left","dialog":[{"if":"potira_dom","id":"potira_2"},{"id":"potira_1"}]},
+   {"id":"curumim","kind":"npc","x":17,"y":16,"speaker":"curumim","dir":"down","wander":true,"dialog":[{"id":"curumim"}]},
+   {"id":"cunha","kind":"npc","x":23,"y":17,"speaker":"cunha","dir":"down","wander":true,"dialog":[{"id":"cunha"}]},
+   {"id":"guaraci","kind":"npc","x":33,"y":11,"speaker":"guaraci","dir":"down","dialog":[{"id":"guaraci"}]},
+   {"id":"pescador","kind":"npc","x":10,"y":22,"speaker":"pescador","dir":"left","dialog":[{"id":"pescador"}]},
+   {"id":"jandira","kind":"npc","x":22,"y":19,"speaker":"jandira","dir":"down","wander":true,"dialog":[{"if":"jandira_dom","id":"jandira_2"},{"id":"jandira_1"}]},
+   {"id":"cesto1","kind":"chest","sprite":"cesto","x":11,"y":5,"items":[["beiju",2]]},
+   {"id":"cesto2","kind":"chest","sprite":"cesto","x":33,"y":18,"items":[["mel",1],["penas_arara",2]]},
+   {"id":"cesto3","kind":"chest","sprite":"cesto","x":2,"y":22,"items":[["cauim",1]]},
+   {"id":"cesto4","kind":"chest","sprite":"cesto","x":31,"y":5,"items":[["pintura_jenipapo",1]]},
+   {"id":"fogo","kind":"sign","x":20,"y":12,"r":24,"dialog":[{"id":"fogueira"}]},
+   {"id":"igara_s","kind":"sign","x":7,"y":22,"r":20,"dialog":[{"id":"igara"}]},
+   {"id":"oca_s","kind":"sign","x":9,"y":8,"r":14,"dialog":[{"id":"oca"}]},
+   {"id":"leste","kind":"transfer","x":39,"y":12,"w":1,"h":2,"to":"trilha","tx":3,"ty":11,"dir":"right","req":"missao_trilha","blocked":"portao_bloqueado"}
+  ],
+  "spawn":{"x":19.5,"y":20,"dir":"up"}
+ },
+ "trilha":{"bgm":"mata","name":"Trilha da Mata","subtitle":"Ramal do Peabiru · entre a aldeia e o mirante","width":64,"height":22,"fill":"T",
+  "ambient":{"color":"rgba(8,22,34,0.50)","grade":["#7ac0a8","#1a2a4a"],"gradeAlpha":0.2,"sun":[-0.35,0.55,0.45],"shadowAlpha":0.38,"bloom":0.75,"tilt":1,"rays":"cool","fireflies":42,"leaves":0.12,"canopy":true},
+  "tiles":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTb,,,bTTTTTTTTTTT~~TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTT,,,TTTTTTTTTTTT~~TTTTTTTTTTTTTTTTTTTTTTbTTTTTTT","TTTTTTTTTTTTTTTTT,,,bTTbTTTTTTTT~~TTTTTTTTTTTTTTTTTTTT,,,,,,,TTT","TTTTTTTTTTb,,,,,,,:,,f,,,,TTTTTT~~TTTTTTTTTTTTTTTTTTTw,,,,f,,,Tr","TTTTTTTTTT,,,,,,f,:wf,,,,,,TTTT~~TTTTTTTTTTTTTTTTTTT,,,,,,,,,,,r","TTTTTTTTT,,,:::::::::::::,,,TTT~~TTTTTTTTTTTTTT,,,,,,,,,,,,,,,,r","TbTTTTbTf,,:,f,,f,,,,,,f::,,,T~~TTTTTTTTTTTTTTw,w,,,,f,,,,f,,,,r",",,f,,,,,,,:,,,,,,,f,,,f,w::,,,~~bTTTTTTTTTTTb,,,::::::::f,,,,,fr",",,,,,,,,,:,,,TbbbTTTTbb,,,::,,~~,,TbTTTTTTbT,,,:,,f,,,,,,,,,f,fr",":::::::::,,,TTTTTTTTTTTT,,,:,,__f,,,,,,,,,,,fw:rf,,,ff,,,,,,,,wr",",,,,,,,,,,fTTTTTTTTTTTTTTf,,:::__,f,f,,,,,f,,:,,,bT,r,,w,,f,,,fr",",,,,,,,,,,TTTTTTTTTTTTTTTT,f,,,__::::::::::::,,,bTTb,,,,,,,f,,,r","TTTTTTTTTTTTTTTTTTTTTTTTTTT,w,,,__,,,,,f:,,,,,,TTTTb,,,,wr,,,,,r","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT,__,,,,,,:,,,,,TTTTTTT,,,,,,,,,br","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTb~~TTTTT,:rTTbTTTTTTTTT,,f,,,fTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTb,:,TTTTTTTTTTTTbTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTT,,,TTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTTf,,bTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTTT,r,TTTTTTTTTTTTTTTTTTTTTT","TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT~~TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"],
+  "objects":[{"type":"acampamento","x":54,"y":8},{"type":"brasas","x":58,"y":9}],
+  "events":[
+   {"id":"caua","kind":"npc","x":24,"y":10,"speaker":"caua","dir":"down","dialog":[{"if":"caua_ajudado","id":"caua_2"},{"id":"caua_1"}]},
+   {"id":"jaci","kind":"npc","x":19,"y":4,"speaker":"jaci","dir":"down","wander":true,"dialog":[{"id":"jaci"}]},
+   {"id":"bau1","kind":"chest","sprite":"bau","x":18,"y":2,"items":[["jurubeba",2]]},
+   {"id":"bau2","kind":"chest","sprite":"bau","x":40,"y":19,"items":[["polvora",3],["gibao_acolchoado",1]]},
+   {"id":"bau3","kind":"chest","sprite":"bau","x":55,"y":6,"items":[["carta_lacrada",1]],"after":"carta_lida","battle":"acampamento","battleIntro":"emboscada","battleOutro":"emboscada_fim"},
+   {"id":"cruz","kind":"sign","x":13,"y":10,"r":16,"dialog":[{"id":"cruz"}]},
+   {"id":"onca","kind":"sign","x":41,"y":17,"r":16,"dialog":[{"id":"pegadas_onca"}]},
+   {"id":"botas","kind":"sign","x":46,"y":11,"r":16,"dialog":[{"id":"pegadas_botas"}]},
+   {"id":"oeste","kind":"transfer","x":0,"y":9,"w":1,"h":4,"to":"aldeia","tx":37,"ty":12.5,"dir":"left"},
+   {"id":"mirante","kind":"trigger","x":61,"y":6,"w":2,"h":9,"script":"mirante","once":"mirante_visto"}
+  ],
+  "encounters":{"steps":[520,980],"troops":[["cacadores",3],["patrulha",3],["caes",2],["jararacas",2],["onca",1]]},
+  "onEnter":{"flag":"trilha_visitada","dialog":"trilha_chegada"},
+  "spawn":{"x":3,"y":11,"dir":"right"}
+ }
+}
+</script>

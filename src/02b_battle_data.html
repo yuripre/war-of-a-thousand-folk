@@ -1,0 +1,77 @@
+
+<!-- ===== Combate: bestiário (Enemies), habilidades inimigas e grupos de inimigos (Troops) ===== -->
+<script type="application/json" data-db="enemies">
+[
+ {"id":"arcabuzeiro","name":"Arcabuzeiro","hp":380,"atk":32,"def":20,"agi":12,"luk":10,"shield":3,"weak":["flecha","fogo"],
+  "ai":[["atacar",2],["disparo_arcabuz",3],["recarregar",1]],"exp":24,"gold":30,"drops":[["polvora",0.3]],
+  "sprite":{"type":"human","speaker":"mercenario"},"habitat":"Litoral, acampamentos","desc":"Soldado de aluguel. Lento para recarregar, letal quando acerta."},
+ {"id":"capataz","name":"Capataz Escravista","hp":460,"atk":34,"def":24,"agi":20,"luk":12,"shield":4,"weak":["contusao","flecha"],
+  "ai":[["atacar",2],["chicote",3],["correntes",1]],"exp":30,"gold":45,"drops":[["beiju",0.4]],
+  "sprite":{"type":"human","speaker":"capataz"},"habitat":"Trilhas, engenhos","desc":"Caçador de “peças” a serviço dos engenhos de São Vicente."},
+ {"id":"cao_caca","name":"Cão de Caça","hp":240,"atk":28,"def":12,"agi":46,"luk":14,"shield":2,"weak":["lamina","fogo"],
+  "ai":[["mordida",4],["uivo",1]],"exp":14,"gold":0,"drops":[["mandioca",0.2]],
+  "sprite":{"type":"dog"},"habitat":"Trilha da Mata","desc":"Mastim treinado para farejar fugitivos."},
+ {"id":"onca","name":"Onça-Pintada","hp":900,"atk":44,"def":22,"agi":52,"luk":20,"shield":5,"weak":["lamina","fogo"],
+  "ai":[["bote",3],["garra",3],["rugido",1]],"exp":70,"gold":0,"drops":[["colar_dentes",0.6],["penas_arara",0.5]],
+  "sprite":{"type":"jaguar"},"habitat":"Mata densa","desc":"Iauaretê, senhora da mata. Ataca em sequência."},
+ {"id":"jararaca","name":"Jararaca","hp":180,"atk":26,"def":10,"agi":38,"luk":10,"shield":2,"weak":["contusao","lamina"],
+  "ai":[["picada_venenosa",3],["atacar",2]],"exp":10,"gold":0,"drops":[["jurubeba",0.3]],
+  "sprite":{"type":"snake"},"habitat":"Samambaiais","desc":"Serpente de bote venenoso."},
+ {"id":"besteiro","name":"Besteiro","hp":350,"atk":34,"def":18,"agi":18,"luk":10,"shield":3,"weak":["lamina","contusao"],
+  "ai":[["virote",3],["atacar",1]],"exp":22,"gold":28,"drops":[["beiju",0.25]],
+  "sprite":{"type":"human","speaker":"besteiro"},"habitat":"Acampamentos","desc":"Atirador de besta da guarda do fidalgo."},
+ {"id":"bergantim","name":"Bergantim","hp":1100,"atk":40,"def":30,"agi":16,"luk":10,"shield":5,"weak":["fogo","enxame"],"ship":true,
+  "ai":[["falconete",3],["rede_abordagem",1]],"exp":120,"gold":150,"drops":[["polvora",0.6]],
+  "sprite":{"type":"bergantim"},"habitat":"Baía de Guanabara","desc":"Navio ligeiro de remos e vela. Leva falconetes na proa."},
+ {"id":"mercenario_espada","name":"Espadachim Mercenário","hp":480,"atk":40,"def":30,"agi":26,"luk":12,"shield":4,"weak":["flecha","contusao"],
+  "ai":[["atacar",3],["rede_abordagem",1]],"exp":45,"gold":60,"drops":[["beiju",0.4]],
+  "sprite":{"type":"human","speaker":"espadachim"},"habitat":"Naus do fidalgo","desc":"Veterano das guerras d’África, de couraça e montante."},
+ {"id":"nau_escravista","name":"Nau Capitânia","hp":2600,"atk":46,"def":34,"agi":10,"luk":10,"shield":8,"weak":["fogo","enxame"],"ship":true,
+  "ai":[["falconete",2],["preparar_bombarda",2],["rede_abordagem",1]],"exp":300,"gold":400,"drops":[["cauim",1]],
+  "sprite":{"type":"nau"},"habitat":"Baía de Guanabara","desc":"Casco de carvalho e bombardas de bronze. Quando carrega os canhões, é preciso quebrá-la antes do disparo."},
+ {"id":"capitao_alvaro","name":"Capitão Dom Álvaro Teles","hp":4400,"atk":50,"def":36,"mat":30,"agi":34,"luk":20,"shield":6,"weak":["contusao","flecha","enxame"],"boss":true,
+  "ai":[["estocada_fidalga",3],["grilhoes",1],["brasao",1],["ordem_fogo",1]],
+  "phase2":{"at":0.5,"dialog":"alvaro_fase2","shield":8,"actions":2,"ai":[["estocada_fidalga",3],["ordem_fogo",2],["reforcos",1],["grilhoes",1]]},
+  "exp":900,"gold":1200,"drops":[["espada_fidalgo",1]],"sprite":{"type":"human","speaker":"fidalgo","scale":2.6},"habitat":"Nau Capitânia","desc":"Fidalgo escravista, Capitão-mor da frota. Ferido, perde a compostura — e passa a agir duas vezes por turno."}
+]
+</script>
+
+<script type="application/json" data-db="enemySkills">
+{
+ "atacar":{"name":"Ataque","type":"fisico","power":1.0,"target":"um","fx":"lamina"},
+ "disparo_arcabuz":{"name":"Disparo de Arcabuz","type":"fisico","power":1.5,"target":"um","fx":"tiro"},
+ "recarregar":{"name":"Recarregar","type":"carga","desc":"O próximo golpe causa dano dobrado."},
+ "chicote":{"name":"Chicotada","type":"fisico","power":1.1,"target":"um","fx":"lamina","effects":[{"debuff":"def","value":0.8,"turns":2,"chance":0.5}]},
+ "correntes":{"name":"Correntes","type":"debuff","target":"um","effects":[{"debuff":"agi","value":0.6,"turns":3}]},
+ "mordida":{"name":"Mordida","type":"fisico","power":1.1,"target":"um","fx":"garra"},
+ "uivo":{"name":"Uivo da Matilha","type":"buff","target":"aliados","effects":[{"buff":"atk","value":1.3,"turns":3}]},
+ "bote":{"name":"Bote","type":"fisico","power":0.8,"hits":2,"target":"um","fx":"garra"},
+ "garra":{"name":"Garra","type":"fisico","power":1.2,"target":"um","fx":"garra"},
+ "rugido":{"name":"Rugido","type":"debuff","target":"todos","effects":[{"debuff":"atk","value":0.8,"turns":3}]},
+ "picada_venenosa":{"name":"Picada Venenosa","type":"fisico","power":0.9,"target":"um","fx":"garra","effects":[{"state":"veneno","chance":0.6,"turns":4}]},
+ "virote":{"name":"Virote de Besta","type":"fisico","power":1.3,"target":"um","fx":"tiro"},
+ "falconete":{"name":"Falconete","type":"fisico","power":1.4,"target":"um","fx":"canhao"},
+ "preparar_bombarda":{"name":"Carregar Bombardas","type":"preparo","then":"bombarda","warn":"Canhões carregando!"},
+ "bombarda":{"name":"Salva de Bombardas","type":"fisico","power":1.6,"target":"todos","fx":"canhao"},
+ "rede_abordagem":{"name":"Rede de Abordagem","type":"debuff","target":"um","effects":[{"state":"atordoado","turns":1,"chance":0.7}]},
+ "estocada_fidalga":{"name":"Estocada Fidalga","type":"fisico","power":1.8,"target":"um","fx":"lamina"},
+ "ordem_fogo":{"name":"Ordem de Fogo!","type":"fisico","power":0.9,"target":"todos","fx":"tiro"},
+ "brasao":{"name":"Brasão de Armas","type":"buff","target":"self","shield":2,"effects":[{"buff":"def","value":1.4,"turns":3}]},
+ "grilhoes":{"name":"Grilhões","type":"debuff","target":"um","effects":[{"state":"atordoado","turns":1,"chance":0.8},{"debuff":"agi","value":0.6,"turns":2}]},
+ "reforcos":{"name":"Reforços!","type":"invocar","summon":"arcabuzeiro"}
+}
+</script>
+
+<script type="application/json" data-db="troops">
+{
+ "cacadores":{"name":"Caçadores de gente!","members":["capataz","cao_caca"],"bg":"mata"},
+ "patrulha":{"name":"Patrulha do fidalgo!","members":["arcabuzeiro","besteiro"],"bg":"mata"},
+ "caes":{"name":"Uma matilha!","members":["cao_caca","cao_caca","cao_caca"],"bg":"mata"},
+ "jararacas":{"name":"Ninho de jararacas!","members":["jararaca","jararaca"],"bg":"mata"},
+ "onca":{"name":"Iauaretê — a onça-pintada!","members":["onca"],"bg":"mata"},
+ "acampamento":{"name":"Guarda do acampamento!","members":["capataz","arcabuzeiro","cao_caca","besteiro"],"bg":"clareira","noFlee":true},
+ "vanguarda":{"name":"A vanguarda da frota!","members":["bergantim","arcabuzeiro","arcabuzeiro"],"bg":"baia","naval":true,"bgm":"naval","noFlee":true,"noRetreat":true,"pos":[[96,172],[228,162],[266,194]]},
+ "nau_capitania":{"name":"A nau capitânia!","members":["nau_escravista","mercenario_espada","arcabuzeiro"],"bg":"baia","naval":true,"bgm":"naval","noFlee":true,"noRetreat":true,"pos":[[96,180],[232,160],[268,194]]},
+ "capitao":{"name":"Capitão Dom Álvaro Teles!","members":["capitao_alvaro","mercenario_espada","arcabuzeiro"],"bg":"conves","boss":true,"bgm":"chefe","noFlee":true,"noRetreat":true,"pos":[[206,180],[270,150],[120,150]]}
+}
+</script>

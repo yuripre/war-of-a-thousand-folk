@@ -1,0 +1,261 @@
+
+<!-- Árvore de diálogos. Nó: {s:falante, t:texto, next, choices:[{t,next,set}], if/else, set, give:[[item,qtd]], objective, rest} -->
+<script type="application/json" data-db="dialogs">
+{
+ "prologo_mar":{"start":"a","nodes":{
+  "a":{"s":"narrador","t":"Anno Domini de 1564. Atlântico Sul.","next":"b"},
+  "b":{"s":"narrador","t":"Três luas atrás, num cais de Lisboa, um soldado vendeu a armadura que vestira em duas guerras.","next":"c"},
+  "c":{"s":"narrador","t":"Com as moedas comprou uma passagem para a Terra de Santa Cruz… e a esperança de nunca mais matar.","next":"d"},
+  "d":{"s":"afonso","t":"Dizem que esta terra é larga o bastante para um homem recomeçar. Que assim seja.","next":"e"},
+  "e":{"s":"afonso","t":"Sem elmo, sem couraça. Só esta espada velha — que juro desembainhar apenas para proteger.","next":"f"},
+  "f":{"s":"narrador","t":"Mas a terra para onde a nau o levava não dormia em paz. Ardia."}
+ }},
+ "prologo_praia_1":{"start":"a","nodes":{
+  "a":{"s":"afonso","t":"Terra firme, enfim. Cheira a sal… e a mata molhada.","next":"b"},
+  "b":{"s":"afonso","t":"…E a fumo. Há fogo para lá das dunas.","next":"c"},
+  "c":{"s":"voz","t":"Larguem-nos! Socorro!","next":"d"},
+  "d":{"s":"afonso","t":"Gritos. Que Deus me perdoe — não consigo virar as costas."}
+ }},
+ "prologo_confronto":{"start":"a","nodes":{
+  "a":{"s":"fidalgo","t":"Andai, bugres! Os engenhos de São Vicente não esperam. Cada peça vale bom cruzado.","next":"b"},
+  "b":{"s":"mercenario","t":"Capitão! Um homem vem da praia. Português, pelo jeito.","next":"c"},
+  "c":{"s":"fidalgo","t":"Ora, um patrício! Chegaste em boa hora. Ajuda-nos a amarrar estes selvagens e terás a tua parte.","next":"d"},
+  "d":{"s":"afonso","t":"(O que farei?)","choices":[
+    {"t":"[Diplomacia] Há leis d’El-Rei contra o cativeiro injusto. Soltai-os.","next":"e1","set":{"escolha_prologo":"diplomacia"}},
+    {"t":"[Firmeza] Soltem essa gente. Agora.","next":"e2","set":{"escolha_prologo":"firmeza"}}]},
+  "e1":{"s":"fidalgo","t":"Leis! As leis escritas em Lisboa não atravessam o mar, rapaz. Aqui, a lei é a pólvora.","next":"f"},
+  "e2":{"s":"fidalgo","t":"Ha! Um valentão sem couraça. Arcabuzeiro — ensina a este cão o preço da insolência.","next":"f"},
+  "f":{"s":"mercenario","t":"Acendendo o morrão, capitão…","next":"g"},
+  "g":{"s":"afonso","t":"(Jurei não erguer a espada… mas não ficarei parado.)"}
+ }},
+ "prologo_tamoios_a":{"start":"a","nodes":{"a":{"s":"fidalgo","t":"Flecha de fogo?! Os tamoios!"}}},
+ "prologo_tamoios":{"start":"a","nodes":{
+  "a":{"s":"aiyra","t":"Perós! Esta praia é dos Tupinambá. Larguem os nossos — ou a próxima flecha encontra a vossa garganta!","next":"b"},
+  "b":{"s":"kaiyke","t":"Deixa a conversa, Aiyra. O meu tacape fala mais claro!","next":"c"},
+  "c":{"s":"fidalgo","t":"Fogo! Fogo neles!"}
+ }},
+ "prologo_heloisa":{"start":"a","nodes":{"a":{"s":"heloisa","t":"Cubram as cabeças!"}}},
+ "prologo_fuga":{"start":"a","nodes":{
+  "a":{"s":"fidalgo","t":"Pólvora… atirada por uma mulher?! Retirada! Para os botes!","next":"b"},
+  "b":{"s":"fidalgo","t":"Gravai o nome de Dom Álvaro Teles de Meneses! Voltarei com naus e ferro!"}
+ }},
+ "prologo_encontro":{"start":"a","nodes":{
+  "a":{"s":"kaiyke","t":"Agora tu, peró. Fala depressa, antes que eu decida o que és.","next":"b"},
+  "b":{"s":"afonso","t":"Chamo-me Afonso. Não vim caçar ninguém. Vim… deixar de ser o que fui.","next":"c"},
+  "c":{"if":"escolha_prologo=diplomacia","s":"aiyra","t":"Ele tentou falar com o fidalgo como se palavras parassem um arcabuz. Tolo… ou corajoso.","next":"d","else":"c2"},
+  "c2":{"s":"aiyra","t":"Ele encarou os arcabuzes sem couraça. Tolo… ou corajoso.","next":"d"},
+  "d":{"s":"afonso","t":"Se a minha espada vos inquieta, tomai-a. Não a quero erguer contra vós.","next":"e"},
+  "e":{"s":"kaiyke","t":"Guarda tua lâmina. Um homem que entrega a arma ou é santo ou é espião.","next":"f"},
+  "f":{"s":"heloisa","t":"Ou é só um homem cansado. Conheço o tipo.","next":"g"},
+  "g":{"s":"aiyra","t":"E tu, mulher dos perós? Pólvora não nasce na mata.","next":"h"},
+  "h":{"s":"heloisa","t":"Heloísa. Fugi da Vila de Santos há sete dias, com um saco de salitre, enxofre e carvão — e nenhuma vontade de voltar.","next":"i"},
+  "i":{"s":"heloisa","t":"Esse Dom Álvaro compra gente para os engenhos. Ouvi os planos dele na vila. O vosso povo corre perigo.","next":"j"},
+  "j":{"s":"kaiyke","t":"Todo peró diz coisas.","next":"k"},
+  "k":{"s":"aiyra","t":"Basta, Kaiyke. O morubixaba Aimberê decidirá. Vinde, os dois — para Uruçumirim.","next":"l"},
+  "l":{"s":"narrador","t":"E assim, sob o último sol da tarde, quatro destinos tomaram a mesma trilha."}
+ }},
+ "aldeia_chegada":{"start":"a","nodes":{
+  "a":{"s":"aiyra","t":"Esta é Uruçumirim. Aqui as fogueiras nunca se apagam — nem as da festa, nem as da guerra.","next":"b"},
+  "b":{"s":"kaiyke","t":"Não te afastes, peró. Os olhos da aldeia estão em ti.","next":"c"},
+  "c":{"s":"heloisa","t":"Nunca vi casas tão grandes feitas só de palha e madeira…","next":"d"},
+  "d":{"s":"aiyra","t":"Vai à casa grande, ao norte da praça. Aimberê espera.","objective":"Fale com o morubixaba Aimberê na casa grande (norte da praça)."}
+ }},
+ "aimbere_1":{"start":"a","nodes":{
+  "a":{"s":"aimbere","t":"Então este é o peró que enfrentou os seus na praia. Aproxima-te.","next":"b"},
+  "b":{"s":"aimbere","t":"Sou Aimberê. Tupinambá, Goitacá, Aimoré… mil povos se ergueram contra os perós. Chamam-nos Confederação.","next":"c"},
+  "c":{"s":"afonso","t":"(Como responder?)","choices":[
+    {"t":"Não vim como inimigo. Quero paz entre os povos.","next":"d1","set":{"resp_aimbere":"paz"}},
+    {"t":"Conheço as armas e os navios deles. Posso ajudar.","next":"d2","set":{"resp_aimbere":"ajuda"}},
+    {"t":"Ainda não sei o que vim fazer aqui.","next":"d3","set":{"resp_aimbere":"duvida"}}]},
+  "d1":{"s":"aimbere","t":"Paz… os padres de preto também falam de paz, enquanto os fidalgos afiam as correntes. Mas os teus olhos não mentem.","next":"e"},
+  "d2":{"s":"aimbere","t":"Um guerreiro que sabe como pensa o inimigo vale mais que cem flechas. Veremos se és sincero.","next":"e"},
+  "d3":{"s":"aimbere","t":"Honesto. Raro entre os teus. A mata ensina quem tem paciência.","next":"e"},
+  "e":{"s":"aimbere","t":"Meus batedores viram homens de botas na Trilha da Mata, a leste. Talvez os mesmos da praia.","next":"f"},
+  "f":{"s":"aimbere","t":"Aiyra, Kaiyke: levem o peró e a mulher da pólvora. Descubram o que tramam. E voltem vivos.","next":"g"},
+  "g":{"s":"kaiyke","t":"Como quiseres, morubixaba. Mas eu vigio o peró.","next":"h"},
+  "h":{"s":"aimbere","t":"Levem estes beijus. Ninguém luta de barriga vazia.","give":[["beiju",3]],"set":{"missao_trilha":true},"objective":"Investigue a Trilha da Mata (portão leste da aldeia)."}
+ }},
+ "aimbere_2":{"start":"a","nodes":{"a":{"s":"aimbere","t":"A Trilha da Mata fica além do portão leste. Que Tupã guie os vossos passos."}}},
+ "aimbere_3":{"start":"a","nodes":{"a":{"s":"aimbere","t":"Cinco naus… Então a guerra virá pela água. Que venha: Uruçumirim tem igaras e coragem."}}},
+ "portao_bloqueado":{"start":"a","nodes":{"a":{"s":"kaiyke","t":"Espera, peró. Ninguém sai da aldeia sem ouvir o morubixaba Aimberê."}}},
+ "paje_1":{"start":"a","nodes":{
+  "a":{"s":"paje","t":"Hm… o vento trouxe um homem de além do grande mar. Os maracás falaram de ti esta noite.","next":"b"},
+  "b":{"s":"paje","t":"Nossos avós caminharam em busca da Terra Sem Mal. Hoje, o mal vem até nós em naus.","next":"c"},
+  "c":{"s":"paje","t":"Leva estas ervas, e este maracá. Curam a carne e acalmam o espírito.","give":[["ervas",2],["maraca_paje",1]],"set":{"paje_ervas":true}}
+ }},
+ "paje_2":{"start":"a","nodes":{"a":{"s":"paje","t":"As ervas curam a carne. A coragem, quem cura é o coração."}}},
+ "jean_1":{"start":"a","nodes":{
+  "a":{"s":"jean","t":"Bonjour, mon ami! Não te espantes. Sou Jean, de Rouen — um truchement. Vivo entre os Tupinambá e falo a língua deles.","next":"b"},
+  "b":{"s":"jean","t":"Os perós chamam-me herege. Os tamoios chamam-me “mair”. Prefiro o segundo.","next":"c"},
+  "c":{"s":"afonso","t":"Franceses aqui, ainda? Ouvi dizer que a França Antártica caiu.","next":"d"},
+  "d":{"s":"jean","t":"O forte de Villegagnon caiu, oui. Mas os nossos navios ainda trazem arcabuzes e pólvora a quem paga em pau-brasil. A guerra é bom negócio… para alguns.","set":{"jean_falou":true}}
+ }},
+ "jean_2":{"start":"a","nodes":{"a":{"s":"jean","t":"Se fores à baía, conta as naus. Cada uma que entra na Guanabara é uma promessa de sangue."}}},
+ "potira_1":{"start":"a","nodes":{
+  "a":{"s":"potira","t":"Mastiga-se a mandioca, ferve-se, espera-se. O cauim é como a vingança: precisa de tempo.","next":"b"},
+  "b":{"s":"potira","t":"Toma, menino peró. Estás magro como galho seco.","give":[["mandioca",2]],"set":{"potira_dom":true}}
+ }},
+ "potira_2":{"start":"a","nodes":{"a":{"s":"potira","t":"O cauim ainda não está pronto. Volta no dia da festa."}}},
+ "curumim":{"start":"a","nodes":{
+  "a":{"s":"curumim","t":"Peró! Peró! Tens barba de macaco-prego!","next":"b"},
+  "b":{"s":"afonso","t":"…E tu tens a língua de um papagaio."}
+ }},
+ "cunha":{"start":"a","nodes":{
+  "a":{"s":"cunha","t":"Minha mãe diz que os perós comem gente. É verdade?","next":"b"},
+  "b":{"s":"afonso","t":"Só a comida do navio. E foi ela que quase me comeu a mim."}
+ }},
+ "guaraci":{"start":"a","nodes":{
+  "a":{"s":"guaraci","t":"Vês aquelas igaras na praia? Cada uma leva trinta guerreiros. Quando a lua certa chegar, a baía será nossa.","next":"b"},
+  "b":{"s":"afonso","t":"Trinta homens numa canoa contra uma nau de canhões?","next":"c"},
+  "c":{"s":"guaraci","t":"A nau é grande, mas é lenta, e fica cega no meio da fumaça. E nós temos… surpresas."}
+ }},
+ "pescador":{"start":"a","nodes":{
+  "a":{"s":"pescador","t":"Dizem que os perós têm medo de abelhas. Eu vi um arcabuzeiro pular no mar por causa de uma colmeia!","next":"b"},
+  "b":{"s":"pescador","t":"Uma colmeia bem atirada vale mais que dez flechas. Guarda isso, peró."}
+ }},
+ "jandira_1":{"start":"a","nodes":{
+  "a":{"if":"escolha_prologo=diplomacia","s":"jandira","t":"Foste tu, na praia! Tentaste falar por nós ao homem de ferro. Ninguém nunca fez isso.","next":"b","else":"a2"},
+  "a2":{"s":"jandira","t":"Foste tu, na praia! Ficaste entre nós e os arcabuzes.","next":"b"},
+  "b":{"s":"jandira","t":"Toma. Mel das abelhas jataí. Dá forças a quem está cansado.","give":[["mel",1]],"set":{"jandira_dom":true}}
+ }},
+ "jandira_2":{"start":"a","nodes":{"a":{"s":"jandira","t":"Obrigada, peró de alma boa."}}},
+ "fogueira":{"start":"a","nodes":{
+  "a":{"s":"heloisa","t":"O fogo é igual em toda parte. Na vila ou na aldeia, aquece do mesmo jeito.","next":"b"},
+  "b":{"s":"aiyra","t":"…Afonso. Por que lutaste por nós na praia? Eles eram do teu sangue.","next":"c"},
+  "c":{"s":"afonso","t":"O sangue não escolhe o lado certo, Aiyra. As pessoas escolhem.","next":"d"},
+  "d":{"s":"aiyra","t":"(Ela desvia o olhar para as chamas.) Palavras bonitas. Veremos se valem alguma coisa na mata.","next":"e"},
+  "e":{"s":"","t":"O grupo descansa junto ao fogo. HP e MP restaurados.","rest":true}
+ }},
+ "igara":{"start":"a","nodes":{"a":{"s":"","t":"Uma igara escavada num único tronco. Cabem dezenas de remadores. A proa traz desenhos em urucum."}}},
+ "oca":{"start":"a","nodes":{"a":{"s":"","t":"Uma oca comprida, coberta de palha de pindoba. Lá dentro, redes balançam entre os esteios e o fogo doméstico estala."}}},
+ "trilha_chegada":{"start":"a","nodes":{
+  "a":{"s":"kaiyke","t":"O ramal do Peabiru. Nossos avós abriram este caminho até o alto da serra.","next":"b"},
+  "b":{"s":"heloisa","t":"Olhem o chão: marcas de botas. E frescas.","next":"c"},
+  "c":{"s":"aiyra","t":"Há onças por aqui também. E coisas piores, de duas pernas.","objective":"Siga a trilha para leste e encontre o acampamento dos perós."}
+ }},
+ "caua_1":{"start":"a","nodes":{
+  "a":{"s":"caua","t":"Kaiyke… Aiyra… graças a Tupã. Os homens do fidalgo montaram acampamento no mirante, a leste.","next":"b"},
+  "b":{"s":"caua","t":"Vigiam a baía. Esperam navios. Muitos navios.","next":"c"},
+  "c":{"s":"kaiyke","t":"Descansa, Cauã. Nós vamos até lá.","next":"d"},
+  "d":{"s":"heloisa","t":"Bebe isto. É amargo, mas fecha a ferida.","set":{"caua_ajudado":true}}
+ }},
+ "caua_2":{"start":"a","nodes":{"a":{"s":"caua","t":"Ide… e voltai para contar."}}},
+ "jaci":{"start":"a","nodes":{
+  "a":{"s":"jaci","t":"Psst! Não pisem nas samambaias — é ali que a jararaca dorme.","next":"b"},
+  "b":{"s":"jaci","t":"Colho jurubeba para o pajé. Se uma cobra vos morder, mastigai a raiz."}
+ }},
+ "cruz":{"start":"a","nodes":{
+  "a":{"s":"","t":"Uma cruz talhada no tronco de um jequitibá.","next":"b"},
+  "b":{"s":"afonso","t":"Marca dos padres da Companhia de Jesus. Passaram por aqui a pregar…","next":"c"},
+  "c":{"s":"aiyra","t":"A pregar e a levar os nossos parentes para as aldeias deles. Uns chamam-lhe salvação. Outros, cativeiro."}
+ }},
+ "pegadas_onca":{"start":"a","nodes":{
+  "a":{"s":"","t":"Pegadas largas, de quatro dedos, sem marca de garras. Uma onça-pintada passou há pouco.","next":"b"},
+  "b":{"s":"kaiyke","t":"Iauaretê. Se ela nos encontrar, teremos de lutar.","next":"c"},
+  "c":{"s":"","t":"(Combates e encontros aleatórios chegam na Etapa 2.)"}
+ }},
+ "pegadas_botas":{"start":"a","nodes":{
+  "a":{"s":"","t":"Marcas de botas ferradas e o rastro de algo pesado a ser arrastado.","next":"b"},
+  "b":{"s":"heloisa","t":"Correntes. Estão a levar gente."}
+ }},
+ "carta_lida":{"start":"a","nodes":{
+  "a":{"s":"heloisa","t":"Uma carta com o selo de Dom Álvaro. Deixem-me ler…","next":"b"},
+  "b":{"s":"heloisa","t":"“Reúna as peças na baía antes da lua cheia. As naus de São Vicente virão varrer Uruçumirim de uma vez.”","next":"c"},
+  "c":{"s":"afonso","t":"Uma frota. Vão atacar a aldeia pelo mar.","next":"d"},
+  "d":{"s":"kaiyke","t":"Então vejamos com os nossos olhos. O mirante fica logo ali.","set":{"carta_lida":true},"objective":"Vá ao mirante, na borda leste da clareira."}
+ }},
+ "tutorial_batalha":{"start":"a","nodes":{
+  "a":{"s":"","t":"COMBATE — Cada inimigo tem um ESCUDO (◆ com um número). Golpes do elemento a que ele é fraco desgastam o escudo.","next":"b"},
+  "b":{"s":"","t":"Com o escudo a zero, o inimigo sofre QUEBRA (BREAK): perde a vez neste turno e no próximo, e recebe 50% a mais de dano.","next":"c"},
+  "c":{"s":"","t":"Cada herói ganha 1 Ponto de Impulso (BP) por turno. Use Q / E para gastar até 3 BP numa ação: mais golpes no ataque, mais força nas habilidades.","next":"d"},
+  "d":{"s":"","t":"Fraquezas desconhecidas aparecem como “?”. Descubra-as atacando — ou com a Análise Tática de Heloísa. A barra no topo mostra a ordem de ação deste turno e do próximo."}
+ }},
+ "emboscada":{"start":"a","nodes":{
+  "a":{"s":"capataz","t":"Alto! Bugres… e um peró vira-casaca. Dom Álvaro paga bem por cabeças assim!","next":"b"},
+  "b":{"s":"kaiyke","t":"Finalmente alguém que fala a minha língua.","next":"c"},
+  "c":{"s":"afonso","t":"(Desta vez, a espada sai da bainha.)"}
+ }},
+ "emboscada_fim":{"start":"a","nodes":{"a":{"s":"heloisa","t":"Acabou. Vejamos o que guardavam naquele baú."}}},
+ "conselho":{"start":"a","nodes":{
+  "a":{"s":"aimbere","t":"Cinco naus na boca da baía. Então é verdade: Dom Álvaro quer apagar Uruçumirim do mapa.","next":"b"},
+  "b":{"s":"kaiyke","t":"Que venha pela água. Lá a vantagem é nossa.","next":"c"},
+  "c":{"s":"aimbere","t":"Ao entardecer, as igaras partem. Canoas de Uruçumirim, de Ubatuba, de Cabo Frio… cada uma com trinta remos.","next":"d"},
+  "d":{"s":"aimbere","t":"Os velhos sabem como se vence uma nau: fogo nas velas e abelhas no convés. O fidalgo nunca lutou contra a mata em cima do mar.","next":"e"},
+  "e":{"s":"heloisa","t":"Se a nau capitânia cair, o resto da frota perde a cabeça. Dom Álvaro estará nela.","next":"f"},
+  "f":{"s":"afonso","t":"(Partir agora para a Baía de Guanabara?)","choices":[
+    {"t":"Estou pronto. Partamos.","next":"g"},
+    {"t":"Ainda preciso de um momento.","next":"h"}]},
+  "g":{"s":"aimbere","t":"Levai estas colmeias. Guaraci tirou-as dos ocos das árvores — com muito cuidado.","give":[["colmeia",3]],"call":"campanha_naval"},
+  "h":{"s":"aimbere","t":"Não demores. A maré não espera ninguém."}
+ }},
+ "naval_partida":{"start":"a","nodes":{
+  "a":{"s":"narrador","t":"Ao entardecer, a baía encheu-se de igaras. O som dos remos parecia um único coração.","next":"b"},
+  "b":{"s":"kaiyke","t":"Sentes isto, peró? Mil povos a remar juntos.","next":"c"},
+  "c":{"s":"afonso","t":"Nunca vi coragem assim. Nem em Ceuta, nem em Mazagão.","next":"d"},
+  "d":{"s":"aiyra","t":"Ali, a vanguarda deles: um bergantim e homens de arcabuz em botes.","next":"e"},
+  "e":{"s":"heloisa","t":"Abaixem-se nas canoas. E quando eu gritar — fogo nas velas!"}
+ }},
+ "tutorial_naval":{"start":"a","nodes":{
+  "a":{"s":"","t":"BATALHA NAVAL — A barra FÚRIA DA FROTA enche a cada turno e a cada Quebra. Use “Ordem à Frota” para chamar Flechas de Fogo (50%) ou uma Chuva de Colmeias (100%) de todas as igaras.","next":"b"},
+  "b":{"s":"","t":"Navios são fracos a Fogo e ao Enxame ✱ das colmeias. As Colmeias de Abelhas da bolsa também podem ser lançadas como item."}
+ }},
+ "naval_entre":{"start":"a","nodes":{
+  "a":{"s":"aiyra","t":"O bergantim afunda! E ali — a nau capitânia, com a cruz vermelha nas velas.","next":"b"},
+  "b":{"s":"heloisa","t":"Estão a carregar as bombardas. Uma salva daquelas despedaça dez igaras.","next":"c"},
+  "c":{"s":"afonso","t":"Então não lhes daremos tempo. Quebrem-lhes o ritmo antes do disparo!","next":"d"},
+  "d":{"s":"","t":"Dica: quando um inimigo prepara um golpe poderoso, QUEBRAR o seu escudo cancela o ataque."}
+ }},
+ "naval_abordagem":{"start":"a","nodes":{
+  "a":{"s":"narrador","t":"Fogo nas velas, abelhas no convés. A nau capitânia ardia como uma tocha sobre a água.","next":"b"},
+  "b":{"s":"kaiyke","t":"Às cordas! Abordar!","next":"c"},
+  "c":{"s":"fidalgo","t":"Bugres no meu convés?! Guardas, a mim! Ninguém toca no Capitão-mor de Sua Majestade!","next":"d"},
+  "d":{"s":"afonso","t":"Acabou, Dom Álvaro. Rende-te, e ninguém mais precisa de morrer.","next":"e"},
+  "e":{"s":"fidalgo","t":"Tu! O peró sem couraça. Devia ter-te enforcado na praia. Vem — mostra-me se ainda sabes usar essa espada!"}
+ }},
+ "alvaro_fase2":{"start":"a","nodes":{
+  "a":{"s":"fidalgo","t":"Basta de brincadeiras! Arcabuzeiros — fogo à vontade, nem que me acertem a mim!","next":"b"},
+  "b":{"s":"heloisa","t":"Ele perdeu a cabeça. Cuidado: agora ataca duas vezes por turno!"}
+ }},
+ "alvaro_derrota":{"start":"a","nodes":{
+  "a":{"s":"fidalgo","t":"Não… não pode ser… vencido por selvagens e por um traidor…","next":"b"},
+  "b":{"s":"kaiyke","t":"Agora a minha ibirapema decide o fim desta história.","next":"c"},
+  "c":{"s":"afonso","t":"(O que fazer com Dom Álvaro?)","choices":[
+    {"t":"[Poupar] Kaiyke, não. Se o matarmos, viramos aquilo contra o que lutamos.","next":"d1","set":{"destino_alvaro":"poupado"}},
+    {"t":"[Justiça] O destino dele pertence ao povo que ele escravizou.","next":"d2","set":{"destino_alvaro":"justica"}}]},
+  "d1":{"s":"kaiyke","t":"…Hmpf. Que viva, então — acorrentado, como ele acorrentou os nossos.","next":"d1b"},
+  "d1b":{"s":"aiyra","t":"(Aiyra olha para Afonso como quem vê um homem pela primeira vez.)","next":"e"},
+  "d2":{"s":"aiyra","t":"Então que os cativos que ele vendeu decidam. Jandira e os outros esperam em Uruçumirim.","next":"e"},
+  "e":{"s":"fidalgo","t":"Lisboa mandará outras naus… e outras… Esta terra será nossa!","next":"f"},
+  "f":{"s":"afonso","t":"Talvez. Mas não hoje."}
+ }},
+ "naval_epilogo":{"start":"a","nodes":{
+  "a":{"s":"narrador","t":"Naquela tarde, a Baía de Guanabara viu arder a frota de Dom Álvaro. Dezenas de cativos voltaram às suas aldeias.","next":"b"},
+  "b":{"s":"aiyra","t":"Afonso… vais ficar? Agora que sabes de que lado estás?","next":"c"},
+  "c":{"s":"afonso","t":"Vendi a armadura para encontrar paz. Encontrei algo melhor: um lugar pelo qual lutar.","next":"d"},
+  "d":{"s":"heloisa","t":"Que romântico. Alguém tem de lembrar que Lisboa tem mais naus do que nós temos colmeias.","next":"e"},
+  "e":{"s":"kaiyke","t":"Então colheremos mais colmeias. Hoje, cantamos.","next":"f"},
+  "f":{"s":"narrador","t":"A Confederação dos Tamoios resistiria ainda por anos. Mas esta vitória — a de Uruçumirim — seria cantada por mil povos.","set":{"vitoria_guanabara":true},"objective":"Etapa 3 concluída — fale com Aimberê e celebre com Uruçumirim."}
+ }},
+ "aimbere_5":{"start":"a","nodes":{
+  "a":{"s":"aimbere","t":"Uruçumirim canta o vosso nome. Hoje, peró, és um dos nossos.","next":"b"},
+  "b":{"s":"aimbere","t":"Aiyra, este arco era do teu avô. E a ti, Afonso, os anciãos dão o cocar de arara — honra que nenhum peró jamais recebeu.","give":[["arco_guerra",1],["cocar_arara",1]],"set":{"aimbere_presente":true},"next":"c"},
+  "c":{"s":"","t":"(Use o menu C › Equipar para equipar os presentes.)"}
+ }},
+ "aimbere_6":{"start":"a","nodes":{"a":{"s":"aimbere","t":"Descansai, guerreiros. Amanhã os mil povos voltam a remar — mas hoje, cantamos."}}},
+ "jean_loja":{"start":"a","nodes":{
+  "a":{"s":"jean","t":"Ah, mon ami! Pólvora, ervas, um bom gibão… tudo por cruzados honestos. Queres ver?","choices":[{"t":"Ver mercadorias","next":"b"},{"t":"Agora não","next":"c"}]},
+  "b":{"s":"jean","t":"Escolhe com calma.","shop":"jean"},
+  "c":{"s":"jean","t":"Se fores à baía, conta as naus. Cada uma que entra na Guanabara é uma promessa de sangue."}
+ }},
+ "mirante_cedo":{"start":"a","nodes":{"a":{"s":"aiyra","t":"Espera. O acampamento deles está aqui — vasculhemos antes de seguir."}}},
+ "mirante_fim":{"start":"a","nodes":{
+  "a":{"s":"narrador","t":"Do alto do mirante, a Baía de Guanabara abriu-se diante deles, tingida de cobre pelo sol poente.","next":"b"},
+  "b":{"s":"aiyra","t":"Ali… na boca da baía. Velas brancas. Uma, duas… cinco naus.","next":"c"},
+  "c":{"s":"heloisa","t":"A cruz vermelha nas velas. É a frota. Dom Álvaro não mentiu.","next":"d"},
+  "d":{"s":"kaiyke","t":"Então que venham. Cada igara de Uruçumirim será uma lança no flanco deles.","next":"e"},
+  "e":{"s":"afonso","t":"Vim a esta terra para não lutar mais… Mas há guerras que um homem não escolhe. Escolhe apenas de que lado fica.","next":"f"},
+  "f":{"s":"aiyra","t":"(baixinho) Então fica do nosso, Afonso.","next":"g"},
+  "g":{"s":"narrador","t":"A Guerra dos Mil Povos estava apenas a começar.","set":{"etapa1_fim":true},"objective":"Fim da Etapa 1 — explore livremente ou volte à aldeia."}
+ }}
+}
+</script>
